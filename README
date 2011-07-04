@@ -1,0 +1,21 @@
+Hatena Star Everywhere Chrome Extension
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is an early development version of "Hatena Star Everywhere"
+Chrome Extension.
+
+* Install
+
+This is a *development version* and is not packaged.  See
+<http://code.google.com/chrome/extensions/getstarted.html#load-ext>
+for how to install it.
+
+* Availability
+
+Latest version of this software is available at:
+
+  - <http://suika.fam.cx/gate/git/wi/web/chrome-hatena-star-everywhere.git/tree>
+
+* Author
+
+Wakaba <w@suika.fam.cx>.
