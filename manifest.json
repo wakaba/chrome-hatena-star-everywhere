@@ -3,6 +3,10 @@
   "version": "1.0",
   "description": "Show Hatena Star everywhere.",
   "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "star.gif",
+    "popup": "entry.html"
+  },
   "permissions": [
     "tabs",
     "http://*/*",

@@ -1,45 +1,88 @@
 <!DOCTYPE HTML>
-<title>Hatena Star Everywhere &mdash; Background Page</title>
+<title>Stars</title>
+<style>
+  body {
+    min-width: 20em;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  ul li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+  }
+</style>
+<base target=_blank>
 <body>
 
-<script>
-  chrome.tabs.onUpdated.addListener (function (tabId, changeInfo, tab) {
-    if (changeInfo.status != 'complete') return;
-    chrome.tabs.executeScript (tabId, {
-      file: 'load-hatena-star.js',
-      // allFrames: true,
+  <ul id=star-user-list>
+    <li hidden class=template>
+      <img class=star-image>
+      <a class=profile-image-link><img alt class=profile-image></a>
+      <a class=nickname-link></a>
+  </ul>
+
+  <script>
+    var param = {};
+    var query = (location.search || '').replace (/^\?/, '').split (/[&;]/).forEach (function (v) {
+      var w = v.split (/=/, 2).map (function (v) { return decodeURIComponent (v) });
+      param[w[0]] = w[1];
     });
+    if (param.url) {
+      openURL (param.url);
+    }
     
-    chrome.browserAction.setPopup ({
-      tabId: tabId,
-      popup: "entry.html?url=" + encodeURIComponent (tab.url),
-    });
+    var starUserList = document.getElementById ('star-user-list');
+    var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
     
-    var n = 0;
-    var url = 'http://s.st-hatena.com/entry.count.image?uri=' + encodeURIComponent (tab.url);
-    var xhr = new XMLHttpRequest ();
-    xhr.open ('GET', url, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) {
-        if (xhr.status < 400) {
-          var starCounts = {yellow: 0, green: 0, red: 0, blue: 0, purple: 0};
-          var counts = xhr.getResponseHeader ('X-Hatena-Star-Count') || '';
-          counts.split (/,\s+/).forEach (function (v) {
-            var w = v.split (/=/, 2);
-            starCounts[w[0]] = parseInt (w[1]);
-          });
-          
-          var n = starCounts.yellow + starCounts.green + starCounts.red + starCounts.blue + starCounts.purple;
-          chrome.browserAction.setBadgeText ({
-            text: n.toString (),
-            tabId: tabId
-          });
+    function openURL (url) {
+      var entryURL = 'http://s.hatena.com/entry.json?uri=' + encodeURIComponent (url);
+      var xhr = new XMLHttpRequest ();
+      xhr.open ('GET', entryURL, true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status < 400) {
+            var json = JSON.parse (xhr.responseText);
+            var entry = json.entries[0];
+            if (entry) showEntry (entry);
+          }
         }
+      }; // onreadystatechange
+      xhr.send (null);
+    } // openURL
+    
+    function showEntry (json) {
+      if (json.colored_stars) {
+        json.colored_stars.forEach (function (v) {
+          showStars (v.color, v.stars);
+        });
       }
-    }; // onreadystatechange
-    xhr.send (null);
-  });
-</script>
+      if (json.stars) {
+        showStars ('yellow', json.stars);
+      }
+    } // showEntry
+    
+    function showStars (starColor, stars) {
+      stars.forEach (function (entry) {
+        var urlName = entry.name;
+        var nickname = urlName;
+        var userURL = 'http://www.hatena.com/' + urlName + '/';
+        var li = starUserTemplate.cloneNode (true);
+        li.hidden = false;
+        li.getElementsByClassName ('profile-image-link')[0].href = userURL;
+        li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+        var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
+        nicknameEl.href = userURL;
+        nicknameEl.textContent = nickname;
+        nicknameEl.title = 'id:' + urlName;
+        li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.ne.jp/images/star-' + starColor + '.gif';
+        starUserList.appendChild (li);
+      });
+    } // showStars
+  </script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
