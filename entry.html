@@ -15,9 +15,20 @@
     padding: 0;
     line-height: 1.2;
   }
+  
+  .star-title {
+    display: none;
+  }
 </style>
 <base target=_blank>
 <body>
+
+  <div id=star-entry-container>
+    <p class=star-entry>
+      <a class=star-url></a>
+      <span class=star-title></span>
+      <span class=star-container></span>
+  </div>
 
   <ul id=star-user-list>
     <li hidden class=template>
@@ -32,18 +43,32 @@
       var w = v.split (/=/, 2).map (function (v) { return decodeURIComponent (v) });
       param[w[0]] = w[1];
     });
-    if (param.url) {
-      openURL (param.url);
-    }
     
+    var starEntryContainer = document.getElementById ('star-entry-container');
     var starUserList = document.getElementById ('star-user-list');
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
     
-    function openURL (url) {
+    if (param.url) {
+      openURL (param.url, param.title);
+    }
+    
+    function openURL (url, title) {
       var pi = new PageInfo (url);
+      pi.title = title;
+      
       pi.getStarEntry (function (json) {
         showEntry (json);
       });
+      
+      starEntryContainer.getElementsByClassName ('star-url')[0].href = pi.url;
+      starEntryContainer.getElementsByClassName ('star-title')[0].textContent = pi.title;
+      if (self.Hatena && Hatena.Star && Hatena.Star.EntryLoader) {
+        Hatena.Star.EntryLoader.loadNewEntries (starEntryContainer);
+      } else {
+        self.onhatenastarload = function () {
+          Hatena.Star.EntryLoader.loadNewEntries (starEntryContainer);
+        }; // onHatenaStarLoad
+      }
     } // openURL
     
     function showEntry (json) {
@@ -74,6 +99,28 @@
         starUserList.appendChild (li);
       });
     } // showStars
+    
+    self.Hatena = {};
+    Hatena.Star = {};
+    Hatena.Star.SiteConfig = {
+      entryNodes: {
+        '.star-entry': {
+          uri: '.star-url',
+          title: '.star-title',
+          container: '.star-container'
+        }
+      }
+    }; // SiteConfig
+    
+    var script = document.createElement ('script');
+    script.src = "http://s.hatena.com/js/HatenaStar.js";
+    script.charset = "utf-8";
+    script.onload = function () {
+      if (self.onhatenastarload) {
+        self.onhatenastarload ();
+      }
+    }; // onload
+    document.body.appendChild (script);
   </script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****

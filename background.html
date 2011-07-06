@@ -8,6 +8,7 @@
     if (changeInfo.status != 'complete') return;
     
     var pi = new PageInfo (tab.url);
+    pi.title = tab.title;
     
     chrome.tabs.executeScript (tabId, {
       file: 'load-hatena-star.js',
