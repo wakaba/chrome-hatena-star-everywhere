@@ -2,9 +2,13 @@
 <title>Hatena Star Everywhere &mdash; Background Page</title>
 <body>
 
+<script src="page-info.js"></script>
 <script>
   chrome.tabs.onUpdated.addListener (function (tabId, changeInfo, tab) {
     if (changeInfo.status != 'complete') return;
+    
+    var pi = new PageInfo (tab.url);
+    
     chrome.tabs.executeScript (tabId, {
       file: 'load-hatena-star.js',
       // allFrames: true,
@@ -12,32 +16,17 @@
     
     chrome.browserAction.setPopup ({
       tabId: tabId,
-      popup: "entry.html?url=" + encodeURIComponent (tab.url),
+      popup: pi.getEntryPopupURL (),
     });
     
-    var n = 0;
-    var url = 'http://s.st-hatena.com/entry.count.image?uri=' + encodeURIComponent (tab.url);
-    var xhr = new XMLHttpRequest ();
-    xhr.open ('GET', url, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) {
-        if (xhr.status < 400) {
-          var starCounts = {yellow: 0, green: 0, red: 0, blue: 0, purple: 0};
-          var counts = xhr.getResponseHeader ('X-Hatena-Star-Count') || '';
-          counts.split (/,\s+/).forEach (function (v) {
-            var w = v.split (/=/, 2);
-            starCounts[w[0]] = parseInt (w[1]);
-          });
-          
-          var n = starCounts.yellow + starCounts.green + starCounts.red + starCounts.blue + starCounts.purple;
-          chrome.browserAction.setBadgeText ({
-            text: n.toString (),
-            tabId: tabId
-          });
-        }
+    pi.getTotalStarCount (function (n) {
+      if (n > 0) {
+        chrome.browserAction.setBadgeText ({
+          text: n.toString (),
+          tabId: tabId
+        });
       }
-    }; // onreadystatechange
-    xhr.send (null);
+    });
   });
 </script>
 <!--

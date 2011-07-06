@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <title>Stars</title>
+<script src="page-info.js"></script>
 <style>
   body {
     min-width: 20em;
@@ -39,19 +40,10 @@
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
     
     function openURL (url) {
-      var entryURL = 'http://s.hatena.com/entry.json?uri=' + encodeURIComponent (url);
-      var xhr = new XMLHttpRequest ();
-      xhr.open ('GET', entryURL, true);
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-          if (xhr.status < 400) {
-            var json = JSON.parse (xhr.responseText);
-            var entry = json.entries[0];
-            if (entry) showEntry (entry);
-          }
-        }
-      }; // onreadystatechange
-      xhr.send (null);
+      var pi = new PageInfo (url);
+      pi.getStarEntry (function (json) {
+        showEntry (json);
+      });
     } // openURL
     
     function showEntry (json) {
