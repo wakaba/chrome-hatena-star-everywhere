@@ -4,6 +4,7 @@
 <style>
   body {
     min-width: 20em;
+    overflow-x: hidden;
   }
   ul {
     margin: 0;
@@ -15,15 +16,76 @@
     padding: 0;
     line-height: 1.2;
   }
+  
+  img {
+    vertical-align: baseline;
+  }
+  
+  .star-count {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  .star-yellow {
+    color: #F4B128;
+  }
+  .star-green {
+    color: #8ed701;
+  }
+  .star-red {
+    color: #ea475c;
+  }
+  .star-blue {
+    color: #57b1ff;
+  }
+  .star-purple {
+    color: #cd34e3;
+  }
+  
+  #total-star-count span {
+    padding-left: 14px;
+    background-position: left center;
+    background-repeat: no-repeat;
+  }
+  #total-star-count .star-yellow {
+    background-image: url(http://s.hatena.com/images/star-yellow.gif);
+  }
+  #total-star-count .star-green {
+    background-image: url(http://s.hatena.com/images/star-green.gif);
+  }
+  #total-star-count .star-red {
+    background-image: url(http://s.hatena.com/images/star-red.gif);
+  }
+  #total-star-count .star-blue {
+    background-image: url(http://s.hatena.com/images/star-blue.gif);
+  }
+  #total-star-count .star-purple {
+    background-image: url(http://s.hatena.com/images/star-purple.gif);
+  }
+  
+  .star-quote:empty {
+    display: none;
+  }
+  .star-quote {
+    opacity: 0.3;
+    font-size: 80%;
+  }
 </style>
 <base target=_blank>
 <body>
 
+  <p id=total-star-count class=star-count hidden>
+    <span class=star-yellow></span>
+    <span class=star-green></span>
+    <span class=star-red></span>
+    <span class=star-blue></span>
+    <span class=star-purple></span>
+
   <ul id=star-user-list>
     <li hidden class=template>
-      <img class=star-image>
+      <img class=star-image><span class=star-count></span>
       <a class=profile-image-link><img alt class=profile-image></a>
       <a class=nickname-link></a>
+      <q class=star-quote></q>
   </ul>
 
   <script>
@@ -33,16 +95,32 @@
       param[w[0]] = w[1];
     });
     
+    var totalStarCountEl = document.getElementById ('total-star-count');
     var starUserList = document.getElementById ('star-user-list');
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
     
     if (param.url) {
-      openURL (param.url, param.title);
+      setTimeout (function () { openURL (param.url, param.title) }, 1);
     }
     
     function openURL (url, title) {
       var pi = new PageInfo (url);
       pi.title = title;
+      
+      pi.getTotalStarCount (function () {
+        var sc = this.starCounts;
+        var starColors = ['yellow', 'green', 'red', 'blue', 'purple'];
+        for (var n in starColors) {
+          var starColor = starColors[n];
+          var el = totalStarCountEl.getElementsByClassName ('star-' + starColor)[0];
+          if (sc[starColor]) {
+            el.textContent = sc[starColor];
+          } else {
+            el.hidden = true;
+          }
+        }
+        if (sc.total) totalStarCountEl.hidden = false;
+      });
       
       pi.getStarEntry (function (json) {
         showEntry (json);
@@ -61,8 +139,8 @@
     } // showEntry
     
     function showStars (starColor, stars) {
-      stars.forEach (function (entry) {
-        var urlName = entry.name;
+      stars.forEach (function (star) {
+        var urlName = star.name;
         var nickname = urlName;
         var userURL = 'http://www.hatena.com/' + urlName + '/';
         var li = starUserTemplate.cloneNode (true);
@@ -73,7 +151,15 @@
         nicknameEl.href = userURL;
         nicknameEl.textContent = nickname;
         nicknameEl.title = 'id:' + urlName;
-        li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.ne.jp/images/star-' + starColor + '.gif';
+        li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.com/images/star-' + starColor + '.gif';
+        if (star.count) {
+          var starCount = li.getElementsByClassName ('star-count')[0];
+          starCount.textContent = star.count;
+          starCount.className += ' star-' + starColor;
+        }
+        if (star.quote) {
+          li.getElementsByClassName ('star-quote')[0].textContent = star.quote.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
+        }
         starUserList.appendChild (li);
       });
     } // showStars

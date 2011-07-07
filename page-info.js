@@ -31,6 +31,13 @@ PageInfo.prototype = {
   }, // getStarEntry
   
   getTotalStarCount: function (nextCode) {
+    if (this.starCounts) {
+      var self = this;
+      setTimeout (function () {
+        nextCode.apply (self, [self.starCounts.total]);
+      }, 1);
+    }
+    
     var url = 'http://s.st-hatena.com/entry.count.image?uri=' + encodeURIComponent (this.url);
     var xhr = new XMLHttpRequest ();
     xhr.open ('GET', url, true);
@@ -44,8 +51,9 @@ PageInfo.prototype = {
             starCounts[w[0]] = parseInt (w[1]);
           });
           
-          var n = starCounts.yellow + starCounts.green + starCounts.red + starCounts.blue + starCounts.purple;
-          nextCode.apply (this, [n]);
+          starCounts.total = starCounts.yellow + starCounts.green + starCounts.red + starCounts.blue + starCounts.purple;
+          this.starCounts = starCounts;
+          nextCode.apply (this, [starCounts.total]);
         }
       }
     }; // onreadystatechange

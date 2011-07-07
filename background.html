@@ -23,7 +23,7 @@
     pi.getTotalStarCount (function (n) {
       if (n > 0) {
         chrome.browserAction.setBadgeText ({
-          text: n.toString (),
+          text: n > 9999 ? '*' : n.toString (),
           tabId: tabId
         });
       }
