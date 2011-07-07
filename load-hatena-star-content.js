@@ -1,5 +1,15 @@
-Hatena.Star.ConfigLoader.addEventListener ('load', function () { Hatena.Star.EntryLoader.loadNewEntries() });
-new Hatena.Star.ConfigLoader();
+(function () {
+  if (self.Hatena && Hatena.Star && Hatena.Star.SiteConfig) return;
+
+  var showStarScript = document.createElement ("script");
+  showStarScript.src = "http://s.hatena.com/js/HatenaStar.js";
+  showStarScript.charset = 'utf-8';
+  showStarScript.onload = function () {
+    Hatena.Star.ConfigLoader.addEventListener ('load', function () { Hatena.Star.EntryLoader.loadNewEntries() });
+    new Hatena.Star.ConfigLoader();
+  }; // starScript.onload
+  document.body.appendChild (showStarScript);
+}) ();
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
