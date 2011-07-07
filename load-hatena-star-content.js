@@ -1,13 +1,5 @@
-var starScript = document.createElement ("script");
-starScript.src = "http://s.hatena.com/js/HatenaStar.js";
-starScript.charset = 'utf-8';
-starScript.onload = function () {
-  var showStarScript = document.createElement ("script");
-  showStarScript.src = chrome.extension.getURL ('load-hatena-star-content.js');
-  showStarScript.charset = 'utf-8';
-  document.body.appendChild (showStarScript);
-}; // starScript.onload
-document.body.appendChild (starScript);
+Hatena.Star.ConfigLoader.addEventListener ('load', function () { Hatena.Star.EntryLoader.loadNewEntries() });
+new Hatena.Star.ConfigLoader();
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
