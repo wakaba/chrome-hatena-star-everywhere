@@ -105,6 +105,13 @@
       <a class=nickname-link></a>
       <q class=star-quote></q>
   </ul>
+  
+  <ul id=star-comment-list>
+    <li hidden class=template>
+      <a class=profile-image-link><img alt class=profile-image></a>
+      <a class=nickname-link></a>
+      <span class=comment-body></span>
+  </ul>
 
   <script>
     var param = {};
@@ -117,6 +124,8 @@
     var totalStarCountEl = document.getElementById ('total-star-count');
     var starUserList = document.getElementById ('star-user-list');
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
+    var starCommentList = document.getElementById ('star-comment-list');
+    var starCommentTemplate = starCommentList.getElementsByClassName ('template')[0];
     
     if (param.url) {
       setTimeout (function () { openURL (param.url, param.title) }, 1);
@@ -158,6 +167,9 @@
       if (json.stars) {
         showStars ('yellow', json.stars);
       }
+      if (json.comments && json.comments.length) {
+        showStarComments (json.comments);
+      }
     } // showEntry
     
     function showStars (starColor, stars) {
@@ -192,6 +204,24 @@
         starUserList.appendChild (li);
       });
     } // showStars
+    
+    function showStarComments (comments) {
+      comments.forEach (function (comment) {
+        var urlName = comment.name;
+        var nickname = urlName;
+        var userURL = 'http://www.hatena.com/' + urlName + '/';
+        var li = starCommentTemplate.cloneNode (true);
+        li.hidden = false;
+        li.getElementsByClassName ('profile-image-link')[0].href = userURL;
+        li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+        var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
+        nicknameEl.href = userURL;
+        nicknameEl.textContent = nickname;
+        nicknameEl.title = 'id:' + urlName;
+        li.getElementsByClassName ('comment-body')[0].textContent = comment.body.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
+        starCommentList.appendChild (li);
+      });
+    } // showStarComments
   </script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****
