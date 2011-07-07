@@ -21,6 +21,20 @@
     vertical-align: baseline;
   }
   
+  cite {
+    font-style: normal;
+    font-size: 100%;
+    font-weight: bolder;
+    font-family: sans-serif;
+  }
+  code.entry-url {
+    font-size: 70%;
+    color: -webkit-link;
+    font-family: monospace;
+  }
+  code.entry-url::before { content: "<" }
+  code.entry-url::after { content: ">" }
+  
   .star-count {
     font-weight: bold;
     font-family: Arial, sans-serif;
@@ -73,6 +87,10 @@
 <base target=_blank>
 <body>
 
+  <p id=star-entry-info>
+    <cite class=entry-title></cite>
+    <code class=entry-url></code>
+
   <p id=total-star-count class=star-count hidden>
     <span class=star-yellow></span>
     <span class=star-green></span>
@@ -95,6 +113,7 @@
       param[w[0]] = w[1];
     });
     
+    var starEntryInfo = document.getElementById ('star-entry-info');
     var totalStarCountEl = document.getElementById ('total-star-count');
     var starUserList = document.getElementById ('star-user-list');
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
@@ -106,6 +125,9 @@
     function openURL (url, title) {
       var pi = new PageInfo (url);
       pi.title = title;
+      
+      starEntryInfo.getElementsByClassName ('entry-title')[0].textContent = pi.title;
+      starEntryInfo.getElementsByClassName ('entry-url')[0].textContent = pi.url;
       
       pi.getTotalStarCount (function () {
         var sc = this.starCounts;
@@ -139,8 +161,15 @@
     } // showEntry
     
     function showStars (starColor, stars) {
+      var starByUser = {};
       stars.forEach (function (star) {
         var urlName = star.name;
+        if (starByUser[urlName] && starByUser[urlName][star.quote || '']) {
+          var starCount = starByUser[urlName][star.quote || ''];
+          starCount.textContent = parseInt (starCount.textContent) + parseInt (star.count || 1);
+          return;
+        }
+        
         var nickname = urlName;
         var userURL = 'http://www.hatena.com/' + urlName + '/';
         var li = starUserTemplate.cloneNode (true);
@@ -152,14 +181,14 @@
         nicknameEl.textContent = nickname;
         nicknameEl.title = 'id:' + urlName;
         li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.com/images/star-' + starColor + '.gif';
-        if (star.count) {
-          var starCount = li.getElementsByClassName ('star-count')[0];
-          starCount.textContent = star.count;
-          starCount.className += ' star-' + starColor;
-        }
+        var starCount = li.getElementsByClassName ('star-count')[0];
+        starCount.textContent = star.count || 1;
+        starCount.className += ' star-' + starColor;
         if (star.quote) {
           li.getElementsByClassName ('star-quote')[0].textContent = star.quote.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
         }
+        starByUser[urlName] = starByUser[urlName] || {};
+        starByUser[urlName][star.quote || ''] = starCount;
         starUserList.appendChild (li);
       });
     } // showStars

@@ -59,6 +59,23 @@ PageInfo.prototype = {
     }; // onreadystatechange
     xhr.send (null);
   }, // getTotalStarCount
+  
+  parsePageMetadata: function (tabId, nextCode) {
+    var self = this;
+    this.installPageMetadataParser (tabId, function () {
+      chrome.tabs.sendRequest (tabId, {command: 'parsePageMetadata'}, function (res) {
+        if (res.url) self.url = res.url;
+        if (res.title) self.title = res.title;
+        nextCode.apply (self, []);
+      });
+    });
+  }, // parsePageMetadata
+  installPageMetadataParser: function (tabId, nextCode) {
+    var self = this;
+    chrome.tabs.executeScript (tabId, {file: "page-metadata-parser.js"}, function () {
+      nextCode.apply (self, []);
+    });
+  }, // installPageMetadataParser
 }; // PageInfo.prototype
 
 /* ***** BEGIN LICENSE BLOCK *****

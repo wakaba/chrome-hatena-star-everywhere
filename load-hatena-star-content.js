@@ -1,3 +1,5 @@
+/* Run in the content's environment */
+
 (function () {
   if (self.Hatena && Hatena.Star && Hatena.Star.SiteConfig) return;
 

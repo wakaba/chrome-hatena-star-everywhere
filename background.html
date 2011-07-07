@@ -9,24 +9,25 @@
     
     var pi = new PageInfo (tab.url);
     pi.title = tab.title;
+    pi.parsePageMetadata (tabId, function () {
+      chrome.browserAction.setPopup ({
+        tabId: tabId,
+        popup: pi.getEntryPopupURL (),
+      });
+      
+      pi.getTotalStarCount (function (n) {
+        if (n > 0) {
+          chrome.browserAction.setBadgeText ({
+            text: n > 9999 ? '*' : n.toString (),
+            tabId: tabId
+          });
+        }
+      });
+    });
     
     chrome.tabs.executeScript (tabId, {
       file: 'load-hatena-star.js',
       // allFrames: true,
-    });
-    
-    chrome.browserAction.setPopup ({
-      tabId: tabId,
-      popup: pi.getEntryPopupURL (),
-    });
-    
-    pi.getTotalStarCount (function (n) {
-      if (n > 0) {
-        chrome.browserAction.setBadgeText ({
-          text: n > 9999 ? '*' : n.toString (),
-          tabId: tabId
-        });
-      }
     });
   });
 </script>

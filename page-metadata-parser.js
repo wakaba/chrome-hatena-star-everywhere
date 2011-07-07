@@ -1,9 +1,20 @@
 /* Run as a content script */
 
-var starScript = document.createElement ("script");
-starScript.src = chrome.extension.getURL ('load-hatena-star-content.js?' + Math.random ());
-starScript.charset = 'utf-8';
-document.body.appendChild (starScript);
+chrome.extension.onRequest.addListener (function (req, sender, sendRes) {
+  if (req.command != 'parsePageMetadata') return;
+  
+  var res = {};
+  var links = document.getElementsByTagName ('link');
+  var linkL = links.length;
+  for (var i = 0; i < linkL; i++) {
+    var link = links[i];
+    if (/\bcanonical\b/.test (link.rel.toLowerCase ())) {
+      res.url = link.href;
+      break;
+    }
+  }
+  sendRes (res);
+});
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
