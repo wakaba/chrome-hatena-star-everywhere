@@ -1,36 +1,135 @@
 <!DOCTYPE HTML>
+<html lang=en>
 <title>Options &mdash; Hatena Star Everywhere</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0.5em;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+  }
+  
+  h1 {
+    margin: 0;
+    padding: 0 0 0.4em 66px;
+    background-image: url(star.gif);
+    background-repeat: no-repeat;
+    background-position: center left;
+    min-height: 66px;
+    font-size: 150%;
+    line-height: 66px;
+  }
+  
+  section {
+    margin: 0;
+    margin-bottom: 1em;
+  }
+  
+  body > section > hgroup {
+    border-top: 1px solid #B5C7DE;
+    background-color: #F4F6FC;
+    border-color: 1px solid #EDEFF5;
+  }
+  
+  h2 {
+    margin: 0;
+    padding: 0.4em 0.5em;
+    font-size: 100%;
+    background-color: #EBEFF9;
+  }
+  
+  section > hgroup > p {
+    margin: 0;
+    padding: 0.3em 0.5em;
+    font-size: 90%;
+  }
+
+  section > section {
+    display: -webkit-box;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid #CDCDCD;
+    padding-bottom: 0.2em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+  section > section > hgroup {
+    width: 10em;
+  }
+  section > section > hgroup p {
+    font-size: 80%;
+  }
+  section > section p {
+    -webkit-box-flex: 1;
+  }
+  h3 {
+    display: block;
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+  }
+  textarea {
+    width: 100%;
+    height: 5em;
+  }
+  
+  menu {
+    margin: 0.5em 0.5em;
+    padding: 0;
+  }
+  menu li {
+    margin: 0;
+    padding: 0.5em;
+  }
+</style>
 <body>
 
-<h1>Options</h1>
+<h1>Options &mdash; Hatena Star Everywhere</h1>
 
-<section>
-  <h2>URLs</h2>
+<section id=privacy>
+  <hgroup>
+    <h2>Privacy</h2>
+    
+    <p>You can specify patterns for disallowed and allowed URLs.  URLs disallowed by these patterns, as well as URLs in a Secret Window, will not be sent to Hatena Star server automatically.  You can still show list of stars for these URLs by opening the star panel by clicking the Star icon.  Note that these regular expressions are evaluated in order.
+  </hgroup>
   
-  <table class=config>
-    <tr>
-      <th>
-        <p>1. Allowed URLs
-      <td>
-        <textarea readonly>^http://&#xa;^https://</textarea>
-    <tr>
-      <th>
-        <p>2. Disallowed URLs
-        <p>(Newline-separated regular expressions)
-      <td>
-        <textarea id=disallowed-urls data-default="^https://"></textarea>
-    <tr>
-      <th>
-        <p>3. Allowed URLs
-        <p>(Newline-separated regular expressions)
-      <td>
-        <textarea id=allowed-urls data-default=""></textarea>
-  </table>
+  <section>
+    <hgroup>
+      <h3>1. Allowed URLs</h3>
+    </hgroup>
+    <p><textarea disabled>^http://&#xa;^https://</textarea>
+  </section>
+  
+  <section>
+    <hgroup>
+      <h3>2. Disallowed URLs</h3>
+      <p>(Newline-separated regular expressions)
+    </hgroup>
+    <p><textarea id=disallowed-urls data-default="^https://"></textarea>
+  </section>
+  
+  <section>
+    <hgroup>
+      <h3>3. Allowed URLs</h3>
+      <p>(Newline-separated regular expressions)
+    </hgroup>
+    <p><textarea id=allowed-urls data-default=""></textarea>
+  </section>
 </section>
 
-<menu>
-  <li><a href="logs.html">Logs</a>
-</menu>
+<section id=devel>
+  <hgroup>
+    <h2>For development</h2>
+  </hgroup>
+
+  <menu>
+    <li><a href="logs.html">Logs</a>
+  </menu>
+</section>
 
 <script>
   var ids = ['disallowed-urls', 'allowed-urls'];
