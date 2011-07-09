@@ -71,8 +71,8 @@ PageInfo.prototype = {
   }, // getStarEntry
   
   getTotalStarCount: function (nextCode) {
+    var self = this;
     if (this.starCounts) {
-      var self = this;
       setTimeout (function () {
         nextCode.apply (self, [self.starCounts.total]);
       }, 1);
@@ -92,8 +92,8 @@ PageInfo.prototype = {
           });
           
           starCounts.total = starCounts.yellow + starCounts.green + starCounts.red + starCounts.blue + starCounts.purple;
-          this.starCounts = starCounts;
-          nextCode.apply (this, [starCounts.total]);
+          self.starCounts = starCounts;
+          nextCode.apply (self, [starCounts.total]);
         }
       }
     }; // onreadystatechange
@@ -116,6 +116,33 @@ PageInfo.prototype = {
       nextCode.apply (self, []);
     });
   }, // installPageMetadataParser
+  
+  getAvailUserStarCounts: function (nextCode) {
+    var self = this;
+    var paletteURL = 'http://s.hatena.com/colorpalette.smartphone?uri=' + encodeURIComponent (this.url);
+    var xhr = new XMLHttpRequest ();
+    xhr.open ('GET', paletteURL, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var div = document.createElement ('div');
+          div.innerHTML = xhr.responseText;
+          var form = div.getElementsByTagName ('form')[0];
+          if (form.elements.token && form.elements.token.value) {
+            self.userAddStarToken = form.elements.token.value;
+          }
+          var counts = {};
+          ['green', 'red', 'blue', 'purple'].forEach (function (color) {
+            var el = div.querySelector ('[id=star-count-' + color + ']');
+            if (!el) return;
+            counts[color] = parseInt (el.textContent.replace (/\s+/g, ''));
+          });
+          nextCode.apply (self, [counts]);
+        }
+      }
+    }; // onreadystatechange
+    xhr.send (null);
+  }, // getAvailUserStarCounts
 }; // PageInfo.prototype
 
 /* ***** BEGIN LICENSE BLOCK *****

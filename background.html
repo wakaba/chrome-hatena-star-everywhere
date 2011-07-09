@@ -46,10 +46,7 @@
       
       pi.getTotalStarCount (function (n) {
         if (n > 0) {
-          chrome.browserAction.setBadgeText ({
-            text: n > 9999 ? '*' : n.toString (),
-            tabId: tabId
-          });
+          updateBAStarCount (tabId, n);
         }
       });
     });
@@ -66,6 +63,76 @@
       // allFrames: true,
     });
   });
+  
+  function addStar (url, title, starCounts, token, nextCode) {
+    if (starCounts.yellow || starCounts.green || starCounts.red || starCounts.blue || starCounts.purple) {
+      //
+    } else {
+      return;
+    }
+    
+    var self = this;
+    logger.add ('Adding stars to <' + url + '>...', {data: starCounts});
+    var xhr = new XMLHttpRequest ();
+    var paletteURL = 'http://s.hatena.com/colorpalette.multiple';
+    xhr.open ('POST', paletteURL, 'false');
+    xhr.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          getRKS (function (rks) {
+            var xhr = new XMLHttpRequest ();
+            var addURL = 'http://s.hatena.com/star.add_multi.json?uri=' + encodeURIComponent (url) + '&rks=' + encodeURIComponent (rks);
+            xhr.open ('GET', addURL, true);
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4) {
+                if (xhr.status < 400) {
+                  logger.add ('Stars added to <' + url + '>', {data: starCounts});
+                  var json = JSON.parse (xhr.responseText);
+                  nextCode.apply (self, [json.stars]);
+                }
+              }
+            };
+            xhr.send (null);
+          });
+        }
+      }
+    };
+    xhr.send
+        ('uri=' + encodeURIComponent (url) +
+         '&title=' + encodeURIComponent (title) +
+         '&yellow_count=' + (starCounts.yellow || 0) +
+         '&green_count=' + (starCounts.green || 0) +
+         '&red_count=' + (starCounts.red || 0) +
+         '&blue_count=' + (starCounts.blue || 0) +
+         '&purple_count=' + (starCounts.purple || 0) +
+         '&token=' + encodeURIComponent (token));
+  } // addStar
+  
+  function getRKS (nextCode) {
+    var tthis = this;
+    var xhr = new XMLHttpRequest ();
+    xhr.open ('GET', 'http://s.hatena.com/entries.json', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var json = JSON.parse (xhr.responseText);
+          if (json.rks) {
+            self.userRKS = json.rks;
+            nextCode.apply (tthis, [self.userRKS]);
+          }
+        }
+      }
+    };
+    xhr.send (null);
+  } // getRKS
+  
+  function updateBAStarCount (tabId, n) {
+    chrome.browserAction.setBadgeText ({
+      text: n > 9999 ? '*' : n.toString (),
+      tabId: tabId,
+    });
+  } // updateBAStarCount
   
   logger.add ("background.html initialized");
 </script>

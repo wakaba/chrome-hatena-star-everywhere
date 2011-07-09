@@ -10,7 +10,7 @@
     margin: 0;
     padding: 0;
   }
-  ul li {
+  ul li:not([hidden]) {
     display: block;
     margin: 0;
     padding: 0;
@@ -79,12 +79,71 @@
     background-image: url(http://s.hatena.com/images/star-purple.gif);
   }
   
+  #user-avail-star-count {
+    display: -webkit-box;
+  }
+  #user-avail-star-count p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  #user-avail-star-count p > *:not([hidden]) {
+    display: block;
+    text-align: center;
+  }
+  #user-avail-star-count button {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 7px;
+  }
+  #user-avail-star-count button img {
+    margin: 0;
+    padding: 0;
+    vertical-align: bottom;
+  }
+  #user-avail-star-count button:disabled {
+    opacity: 0.6;
+  }
+  
+  #star-user-list li:not([hidden]) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  #star-user-list .star-user-star:not([hidden]) {
+    display: -webkit-box;
+  }
+  #star-user-list .star-user-star > *:not([hidden]) {
+    display: -webkit-box;
+  }
+  #star-user-list .star-user-count {
+    min-width: 3em;
+  }
+  #star-user-list .star-user-user {
+    -webkit-box-flex: 1;
+  }
+  #star-user-list .star-quote {
+  }
+  
   .star-quote:empty {
-    display: none;
+    display: none !important;
   }
   .star-quote {
     opacity: 0.3;
     font-size: 80%;
+  }
+  .star-delete {
+    display: none !important;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 10px;
+    height: 15px;
+    width: 15px;
+    opacity: 0.3;
+  }
+  #star-user-list li:hover .star-delete {
+    opacity: 1;
+  }
+  .star-delete img {
+    vertical-align: top;
   }
 </style>
 <base target=_blank>
@@ -99,14 +158,36 @@
     <span class=star-green></span>
     <span class=star-red></span>
     <span class=star-blue></span>
-    <span class=star-purple></span>
+    <span class=star-purple hidden></span>
+
+  <div id=user-avail-star-count class=star-count>
+    <p><button type=button class=add-star-yellow><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
+    <span class=star-yellow>&#x221E;</span>
+    <p><button type=button class=add-star-green><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
+    <span class=star-green hidden></span>
+    <p><button type=button class=add-star-red><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
+    <span class=star-red hidden></span>
+    <p><button type=button class=add-star-blue><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
+    <span class=star-blue hidden></span>
+    <p><button type=button class=add-star-purple hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
+    <span class=star-purple hidden></span>
+  </div>
 
   <ul id=star-user-list>
     <li hidden class=template>
-      <img class=star-image><span class=star-count></span>
-      <a class=profile-image-link><img alt class=profile-image></a>
-      <a class=nickname-link></a>
-      <q class=star-quote></q>
+      <span class=star-user-star>
+        <span class=star-user-count>
+          <img class=star-image><span class=star-count></span>
+        </span>
+        <span class=star-user-user>
+          <a class=profile-image-link><img alt class=profile-image></a>
+          <a class=nickname-link></a>
+        </span>
+        <button type=button class=star-delete><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete a star"></button>
+      </span>
+      <span class=star-user-quote>
+        <q class=star-quote></q>
+      </span>
   </ul>
   
   <ul id=star-comment-list>
@@ -127,6 +208,7 @@
     });
     
     var starEntryInfo = document.getElementById ('star-entry-info');
+    var userAvailStarCountEl = document.getElementById ('user-avail-star-count');
     var totalStarCountEl = document.getElementById ('total-star-count');
     var starUserList = document.getElementById ('star-user-list');
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
@@ -141,30 +223,47 @@
       logger.add ('Opening <' + url + '>...');
       
       var pi = new PageInfo (url);
+      self.pageInfo = pi;
       pi.title = title;
       
       starEntryInfo.getElementsByClassName ('entry-title')[0].textContent = pi.title;
       starEntryInfo.getElementsByClassName ('entry-url')[0].textContent = pi.url;
       
-      pi.getTotalStarCount (function () {
-        var sc = this.starCounts;
-        var starColors = ['yellow', 'green', 'red', 'blue', 'purple'];
-        for (var n in starColors) {
-          var starColor = starColors[n];
-          var el = totalStarCountEl.getElementsByClassName ('star-' + starColor)[0];
-          if (sc[starColor]) {
-            el.textContent = sc[starColor];
-          } else {
-            el.hidden = true;
-          }
-        }
-        if (sc.total) totalStarCountEl.hidden = false;
-      });
+      updateTotalStarCounts ();
       
       pi.getStarEntry (function (json) {
         showEntry (json);
       });
+      
+      updateAvailUserStarCounts ();
     } // openURL
+    
+    function updateTotalStarCounts () {
+      self.pageInfo.getTotalStarCount (function () {
+        showTotalStarCounts (this.starCounts, {});
+      });
+    } // updateTotalStarCounts
+    
+    function showTotalStarCounts (sc1, sc2) {
+      var total = 0;
+      ['yellow', 'green', 'red', 'blue', 'purple'].forEach (function (starColor) {
+        var el = totalStarCountEl.getElementsByClassName ('star-' + starColor)[0];
+        var count = sc1[starColor] || 0;
+        count += sc2[starColor] || 0;
+        if (count) {
+          el.textContent = count;
+          el.hidden = false;
+          total += count;
+        } else {
+          el.hidden = true;
+        }
+      });
+      totalStarCountEl.hidden = total == 0;
+      
+      chrome.tabs.getSelected (null, function (tab) {
+        if (tab) bg.updateBAStarCount (tab.id, total);
+      });
+    } // showTotalStarCounts
     
     function showEntry (json) {
       if (json.colored_stars) {
@@ -180,12 +279,19 @@
       }
     } // showEntry
     
-    function showStars (starColor, stars) {
-      var starByUser = {};
+    var starByUser = {};
+    function showStars (starColor, stars, opts) {
       stars.forEach (function (star) {
+        var color = starColor || star.color;
+        
+        if (opts && opts.incrementStarCounts && self.pageInfo.starCounts) {
+          self.pageInfo.starCounts[color]++;
+          self.pageInfo.starCounts.total++;
+        }
+        
         var urlName = star.name;
-        if (starByUser[urlName] && starByUser[urlName][star.quote || '']) {
-          var starCount = starByUser[urlName][star.quote || ''];
+        if (starByUser[urlName] && starByUser[urlName][color] && starByUser[urlName][color][star.quote || '']) {
+          var starCount = starByUser[urlName][color][star.quote || ''];
           starCount.textContent = parseInt (starCount.textContent) + parseInt (star.count || 1);
           return;
         }
@@ -200,15 +306,22 @@
         nicknameEl.href = userURL;
         nicknameEl.textContent = nickname;
         nicknameEl.title = 'id:' + urlName;
-        li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.com/images/star-' + starColor + '.gif';
+        li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.com/images/star-' + color + '.gif';
         var starCount = li.getElementsByClassName ('star-count')[0];
         starCount.textContent = star.count || 1;
-        starCount.className += ' star-' + starColor;
+        starCount.className += ' star-' + color;
         if (star.quote) {
           li.getElementsByClassName ('star-quote')[0].textContent = star.quote.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
         }
+        
+        li.getElementsByClassName ('star-delete')[0].onclick = function () {
+          deleteStar (color, star.quote, li);
+        };
+        li.setAttribute ('data-star-user-name', star.name);
+        
         starByUser[urlName] = starByUser[urlName] || {};
-        starByUser[urlName][star.quote || ''] = starCount;
+        starByUser[urlName][color] = starByUser[urlName][color] || {};
+        starByUser[urlName][color][star.quote || ''] = starCount;
         starUserList.appendChild (li);
       });
     } // showStars
@@ -230,6 +343,117 @@
         starCommentList.appendChild (li);
       });
     } // showStarComments
+    
+    function updateAvailUserStarCounts () {
+      self.pageInfo.getAvailUserStarCounts (function (counts) {
+        ['yellow', 'green', 'red', 'blue', 'purple'].forEach (function (color) {
+          var button = userAvailStarCountEl.getElementsByClassName ('add-star-' + color)[0];
+          button.onclick = function () {
+            addStarLater (color);
+          };
+
+          if (color == 'yellow') return;
+          
+          var el = userAvailStarCountEl.getElementsByClassName ('star-' + color)[0];
+          if (counts[color]) {
+            el.textContent = counts[color];
+            el.hidden = false;
+            button.hidden = false;
+          } else if (color == 'purple') {
+            el.hidden = true;
+            button.hidden = true;
+          } else {
+            el.textContent = 0;
+            el.hidden = false;
+            button.hidden = false;
+            button.disabled = true;
+          }
+        });
+      });
+    } // updateUserAvailStarCounts
+    
+    self.nextAddStarCounts = {};
+    function addStarLater (color) {
+      if (!self.nextAddStarCounts[color]) {
+        self.nextAddStarCounts[color] = 1;
+      } else {
+        self.nextAddStarCounts[color]++;
+      }
+      clearTimeout (self.addStarTimer);
+      self.addStarTimer = setTimeout (function () {
+        addStar ();
+      }, 1000);
+      showTotalStarCounts (self.pageInfo.starCounts, self.nextAddStarCounts);
+    } // addStarLater
+    addEventListener ('beforeunload', addStar, false);
+    
+    function addStar () {
+      bg.addStar (self.pageInfo.url, self.pageInfo.title, self.nextAddStarCounts, self.pageInfo.userAddStarToken, function (stars) {
+        if (!stars) return;
+        showStars (null, stars, {incrementStarCounts: true});
+        updateAvailUserStarCounts ();
+        updateTotalStarCount ();
+      });
+      self.nextAddStarCounts = {};
+    } // addStar
+    
+    function deleteStar (color, quote, li) {
+      chrome.extension.getBackgroundPage ().getRKS (function (rks) {
+        var xhr = new XMLHttpRequest ();
+        var deleteURL = 'http://s.hatena.com/star.delete.json?uri=' + encodeURIComponent (self.pageInfo.url) + '&quote=' + encodeURIComponent (quote) + '&color=' + encodeURIComponent (color) + '&rks=' + encodeURIComponent (rks);
+        xhr.open ('GET', deleteURL, true);
+        var sc = li.getElementsByClassName ('star-count')[0];
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
+            if (xhr.status < 400) {
+              var json = JSON.parse (xhr.responseText);
+              if (json && json.result && json.result.decremented) {
+                //
+              } else {
+                li.hidden = false;
+                sc.textContent = parseInt (sc.textContent) + 1;
+              }
+              updateTotalStarCounts (self.pageInfo.starCounts, {});
+            }
+          }
+        };
+        xhr.send (null);
+        var count = parseInt (sc.textContent);
+        count--;
+        sc.textContent = count;
+        li.hidden = count == 0;
+        var diff = {};
+        diff[color] = -1;
+        showTotalStarCounts (self.pageInfo.starCounts, diff);
+      });
+    } // deleteStar
+    
+    function getMyInfo (nextCode) {
+      var self = this;
+      var xhr = new XMLHttpRequest ();
+      xhr.open ('GET', 'http://n.hatena.com/applications/my.json', false);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status < 400) {
+            var json = JSON.parse (xhr.responseText);
+            if (json) {
+              nextCode.apply (self, [json]);
+            }
+          }
+        }
+      };
+      xhr.send (null);
+    } // getMyInfo
+    
+    getMyInfo (function (json) {
+      var name = json.url_name;
+      if (name) {
+        var css = 'li[data-star-user-name="' + name + '"] .star-delete { display: block !important }';
+        var style = document.createElement ('style');
+        style.textContent = css;
+        document.body.appendChild (style);
+      }
+    });
   </script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****
