@@ -7,12 +7,13 @@
   
   header {
     display: block;
-    margin: 0;
+    margin: 0 3px 0 0;
     padding: 0.5em 0.3em 0.1em 0.3em;
     background-color: #F3F3F3;
     border: 1px solid #BBBBBB;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    -webkit-box-shadow: 2px 2px #444444;
   }
   
   ul {
@@ -50,9 +51,6 @@
     font-size: 90%;
     color: #A0A0A0;
     font-family: monospace;
-  }
-  code.entry-url:empty {
-    display: none;
   }
   code.entry-url::before { content: "<" }
   code.entry-url::after { content: ">" }
@@ -107,13 +105,13 @@
   
   #tabs {
     display: -webkit-box;
-    margin: 0.2em 0 0 0;
+    margin: 0.4em 0 0 0;
     padding: 0;
   }
   #tabs .tab-button:not([hidden]) {
     display: -webkit-box;
     margin: 0 0.2em -1px 0.4em;
-    padding: 0;
+    padding: 0 0 0.1em 0;
     min-width: 5em;
     border-style: outset outset none outset;
     border-width: 1px;
@@ -154,8 +152,9 @@
     border: #BBBBBB outset 1px;
     border-radius: 3px;
     height: 20em;
-    max-height: 30em;
-    overflow: auto;
+    max-height: 40em;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   section:target {
     display: block;
@@ -171,6 +170,7 @@
   #user-avail-star-count p {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    min-width: 3em;
   }
   #user-avail-star-count p > *:not([hidden]) {
     display: block;
@@ -180,6 +180,12 @@
     background-color: transparent;
     padding: 0;
     border-radius: 7px;
+    width: 39px;
+    height: 39px;
+    box-sizing: content-box;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
   }
   #user-avail-star-count button img {
     margin: -2px;
@@ -205,42 +211,61 @@
     vertical-align: baseline;
   }
   
-  #star-comment-list {
+  #star-comment-list,
+  #haiku-note-list {
     margin-top: 0.5em;
   }
   
   #star-user-list li:not([hidden]),
-  #star-comment-list li:not([hidden]) {
+  #star-comment-list li:not([hidden]),
+  #haiku-note-list li:not([hidden]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     margin: 0.3em 0.5em;
   }
   #star-user-list .star-user-star:not([hidden]),
-  #star-comment-list .star-comment-star:not([hidden]) {
+  #star-comment-list .star-comment-star:not([hidden]),
+  #haiku-note-list .star-comment-star:not([hidden]) {
     display: -webkit-box;
   }
   #star-user-list .star-user-star > *:not([hidden]),
-  #star-comment-list .star-comment-star > *:not([hidden]) {
+  #star-comment-list .star-comment-star > *:not([hidden]),
+  #haiku-note-list .star-comment-star > *:not([hidden]) {
     display: -webkit-box;
   }
   #star-user-list .star-user-count {
     min-width: 3em;
   }
   #star-user-list .star-user-user,
-  #star-comment-list .star-comment-user {
+  #star-comment-list .star-comment-user,
+  #haiku-note-list .star-comment-user {
     -webkit-box-flex: 1;
   }
   #star-user-list .star-user-quote,
-  #star-comment-list .star-comment-body {
+  #star-comment-list .star-comment-body,
+  #haiku-note-list .star-comment-body {
     display: -webkit-box;
     -webkit-box-orient: vertical;
   }
-  #star-comment-list .star-comment-body > *:not([hidden]) {
+  #star-comment-list .star-comment-body > *:not([hidden]),
+  #haiku-note-list .star-comment-body > *:not([hidden]) {
     display: -webkit-box;
     -webkit-box-flex: 1;
   }
   
+  .star-comment-star {
+    margin: 0.2em 0.7em 0.3em 0;
+    padding: 0.3em 0.5em 0.2em 0.2em;
+    background-color: #F0F0F0;
+    border-top-right-radius: 7px;
+    font-size: 80%;
+  }
+  .star-comment-star img {
+    vertical-align: bottom;
+  }
+  
   .nickname-link {
+    color: inherit;
     text-decoration: none !important;
   }
   
@@ -257,7 +282,16 @@
     font-size: 80%;
   }
   
-  .star-delete, .comment-delete {
+  .comment-body {
+    font-size: 95%;
+  }
+  
+  .entry-body {
+    white-space: pre-wrap;
+    font-size: 95%;
+  }
+  
+  .star-delete, .comment-delete, .entry-delete {
     display: none !important;
     background-color: transparent;
     padding: 0;
@@ -267,11 +301,24 @@
     opacity: 0.2;
   }
   #star-user-list li:hover .star-delete,
-  #star-comment-list li:hover .comment-delete {
+  #star-comment-list li:hover .comment-delete,
+  #haiku-note-list li:hover .entry-delete {
     opacity: 1;
   }
   .star-delete img,
-  .comment-delete img {
+  .comment-delete img,
+  .entry-delete img {
+    vertical-align: top;
+  }
+  
+  li.more {
+    text-align: right;
+  }
+  li.more a {
+    color: inherit;
+    text-decoration: none;
+  }
+  li.more img {
     vertical-align: top;
   }
   

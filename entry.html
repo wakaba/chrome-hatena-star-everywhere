@@ -23,6 +23,8 @@
     <li id=menu-comments class=tab-button hidden><a href="#comments" target=_self>Comments
     (<span id=menu-comment-count>0</span>)
     <img src="http://s.hatena.ne.jp/images/private.gif" alt="Private"></a>
+    <li id=menu-notes class=tab-button><a href="#notes" target=_self>Notes
+    (<span id=menu-note-count>0</span>)</a>
   </menu>
 
   <section id=stars>
@@ -84,6 +86,37 @@
               <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
             </span>
         </form>
+    </ul>
+  </section>
+  
+  <section id=notes>
+    <ul id=haiku-note-list>
+      <li id=haiku-note-form hidden>
+        <form>
+          <p class=star-comment-star>
+            <span class=star-comment-user>
+              <a class=profile-image-link><img alt class=profile-image></a>
+              <a class=nickname-link></a>
+            </span>
+          <p class=star-comment-body>
+            <textarea name=body class=entry-body></textarea>
+            <span class=comment-submit>
+              <button type=submit name=submit>Send</button>
+              <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
+            </span>
+        </form>
+      <li hidden class=template>
+        <p class=star-comment-star>
+          <span class=star-comment-user>
+            <a class=profile-image-link><img alt class=profile-image></a>
+            <a class=nickname-link></a>
+          </span>
+          <time class=entry-timestamp></time>
+          <button type=button class=entry-delete data-confirm="Do you really want to delete this entry?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this entry"></button>
+        <p class=star-comment-body>
+          <span class=entry-body></span>
+      <li class=more>
+        <a href=""><img src="https://www.hatena.ne.jp/images/favicon/haiku.gif" alt=Haiku> More...</a>
     </ul>
   </section>
   

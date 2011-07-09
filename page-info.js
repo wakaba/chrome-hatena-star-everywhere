@@ -55,6 +55,7 @@ PageInfo.prototype = {
   }, // entryPopupURL
   
   getStarEntry: function (nextCode) {
+    var self = this;
     var entryURL = 'http://s.hatena.com/entry.json?uri=' + encodeURIComponent (this.url);
     var xhr = new XMLHttpRequest ();
     xhr.open ('GET', entryURL, true);
@@ -63,12 +64,28 @@ PageInfo.prototype = {
         if (xhr.status < 400) {
           var json = JSON.parse (xhr.responseText);
           var entry = json.entries[0];
-          if (entry) nextCode.apply (this, [entry]);
+          if (entry) nextCode.apply (self, [entry]);
         }
       }
     }; // onreadystatechange
     xhr.send (null);
   }, // getStarEntry
+  
+  getHaikuEntriesByWord: function (word, nextCode) {
+    var self = this;
+    var entriesURL = 'http://h.hatena.ne.jp/api/statuses/keyword_timeline.json?word=' + encodeURIComponent (word);
+    var xhr = new XMLHttpRequest ();
+    xhr.open ('GET', entriesURL, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var json = JSON.parse (xhr.responseText);
+          nextCode.apply (self, [json]);
+        }
+      }
+    };
+    xhr.send (null);
+  }, // getHaikuEntriesByWord
   
   getTotalStarCount: function (nextCode) {
     var self = this;

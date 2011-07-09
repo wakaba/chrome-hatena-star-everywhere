@@ -127,6 +127,26 @@
     xhr.send (null);
   } // getRKS
   
+  function getRKM (nextCode) {
+    var tthis = this;
+    var xhr = new XMLHttpRequest ();
+    xhr.open ('GET', 'http://n.hatena.ne.jp/touch/setting/', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var div = document.createElement ('div');
+          div.innerHTML = xhr.responseText;
+          var rkm = div.querySelector('input[name=rkm]');
+          if (rkm && rkm.value) {
+            self.userRKM = rkm.value;
+            nextCode.apply (tthis, [self.userRKM]);
+          }
+        }
+      }
+    };
+    xhr.send (null);
+  } // getRKM
+  
   function updateBAStarCount (tabId, n) {
     chrome.browserAction.setBadgeText ({
       text: n > 9999 ? '*' : n.toString (),

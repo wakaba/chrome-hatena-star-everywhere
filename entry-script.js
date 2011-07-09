@@ -15,15 +15,19 @@
     var starCommentList = document.getElementById ('star-comment-list');
     var starCommentTemplate = starCommentList.getElementsByClassName ('template')[0];
     var starCommentForm = document.getElementById ('star-comment-form');
+    var haikuNoteList = document.getElementById ('haiku-note-list');
+    var haikuNoteTemplate = haikuNoteList.getElementsByClassName ('template')[0];
+    var haikuNoteMore = haikuNoteList.getElementsByClassName ('more')[0];
+    var haikuNoteForm = document.getElementById ('haiku-note-form');
     
     if (param.url) {
-      setTimeout (function () { openURL (param.url, param.title) }, 1);
+      setTimeout (function () { openURL (param.url, param.title) }, 100);
     }
     
     getMyInfo (function (json) {
       var name = json.url_name;
       if (name) {
-        var css = 'li[data-star-user-name="' + name + '"] .star-delete, li[data-comment-user-name="' + name + '"] .comment-delete { display: block !important }';
+        var css = 'li[data-star-user-name="' + name + '"] .star-delete, li[data-comment-user-name="' + name + '"] .comment-delete, li[data-entry-user-name="' + name + '"] .entry-delete { display: block !important }';
         var style = document.createElement ('style');
         style.textContent = css;
         document.body.appendChild (style);
@@ -59,6 +63,9 @@
       
       pi.getStarEntry (function (json) {
         showEntry (json);
+      });
+      pi.getHaikuEntriesByWord (pi.url, function (json) {
+        showHaikuEntries (json);
       });
       
       updateAvailUserStarCounts ();
@@ -217,6 +224,7 @@
       var userURL = 'http://www.hatena.com/' + urlName + '/';
       var li = starCommentTemplate.cloneNode (true);
       li.hidden = false;
+      li.className = '';
       li.getElementsByClassName ('profile-image-link')[0].href = userURL;
       li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
       var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
@@ -363,7 +371,114 @@
       };
       xhr.send (null);
     } // getMyInfo
+
+function showHaikuEntries (entries) {
+  entries.forEach (insertHaikuEntry);
+
+  document.getElementById ('menu-note-count').textContent = entries.length;
+  haikuNoteMore.getElementsByTagName ('a')[0].href = 'http://h.hatena.ne.jp/target?word=' + encodeURIComponent (self.pageInfo.url);
   
+  getMyInfo (function (json) {
+    var urlName = json.url_name;
+    var nickname = json.display_name;
+    var userURL = 'http://www.hatena.com/' + urlName + '/';
+
+    haikuNoteForm.hidden = false;
+    haikuNoteForm.getElementsByClassName ('profile-image-link')[0].href = userURL;
+    haikuNoteForm.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+    var nicknameEl = haikuNoteForm.getElementsByClassName ('nickname-link')[0];
+    nicknameEl.href = userURL;
+    nicknameEl.textContent = nickname;
+    nicknameEl.title = 'id:' + urlName;
+  });
+  haikuNoteForm.getElementsByTagName ('form')[0].onsubmit = function () {
+    var form = this;
+    var body = form.elements.body.value;
+    if (body == '') return false;
+    postHaikuEntry ({
+      word: self.pageInfo.url,
+      body: body,
+    }, function (json) {
+      insertHaikuEntry (json);
+      form.elements.submit.disabled = false;
+      form.getElementsByClassName ('indicator')[0].hidden = true;
+    });
+    form.elements.body.value = '';
+    form.elements.submit.disabled = true;
+    form.getElementsByClassName ('indicator')[0].hidden = false;
+    return false;
+  };
+} // showHaikuEntries
+
+function insertHaikuEntry (entry) {
+  var urlName = entry.user.screen_name;
+  var nickname = entry.user.name;
+  var userURL = 'http://h.hatena.ne.jp/' + urlName + '/';
+  var li = haikuNoteTemplate.cloneNode (true);
+  li.hidden = false;
+  li.className = '';
+  li.getElementsByClassName ('profile-image-link')[0].href = userURL;
+  li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+  var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
+  nicknameEl.href = userURL;
+  nicknameEl.textContent = nickname;
+  nicknameEl.title = 'id:' + urlName;
+  var body = li.getElementsByClassName ('entry-body')[0];
+  body.textContent = entry.text.substring (entry.keyword.length + 1);
+  li.getElementsByClassName ('entry-delete')[0].onclick = function () {
+    if (confirm (this.getAttribute ('data-confirm'))) {
+      deleteHaikuEntry (entry.name, entry.id, function () {
+        li.hidden = true;
+      });
+    }
+  };
+  li.getElementsByClassName ('entry-timestamp')[0].textContent = entry.created_at;
+  li.setAttribute ('data-entry-user-name', entry.user.screen_name);
+  haikuNoteList.insertBefore (li, haikuNoteMore);
+} // insertHaikuEntry
+
+function postHaikuEntry (args, nextCode) {
+  var self = this;
+  bg.getRKM (function (rkm) {
+    var xhr = new XMLHttpRequest ();
+    var postURL = 'http://h.hatena.ne.jp/api/statuses/update.json';
+    xhr.open ('POST', postURL, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var json = JSON.parse (xhr.responseText);
+          nextCode.apply (self, [json]);
+        }
+      }
+    };
+    xhr.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
+    var data = 'keyword=' + encodeURIComponent (args.word) +
+        '&status=' + encodeURIComponent (args.body) +
+        '&rkm=' + encodeURIComponent (rkm);
+    xhr.send (data);
+  });
+} // postHaikuEntry
+
+function deleteHaikuEntry (name, id, nextCode) {
+  var self = this;
+  bg.getRKM (function (rkm) {
+    var xhr = new XMLHttpRequest ();
+    var postURL = 'http://h.hatena.ne.jp/api/statuses/destroy/' + id + '.json';
+    xhr.open ('POST', postURL, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var json = JSON.parse (xhr.responseText);
+          nextCode.apply (self, [json]);
+        }
+      }
+    };
+    xhr.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
+    var data = 'author_url_name=' + name + '&rkm=' + encodeURIComponent (rkm);
+    xhr.send (data);
+  });
+} // deleteHaikuEntry
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
  *
