@@ -3,11 +3,15 @@
 <body>
 
 <script src="page-info.js"></script>
+<script src="logger.js"></script>
 <script>
+  self.logger = new Logger ();
+
   chrome.tabs.onUpdated.addListener (function (tabId, changeInfo, tab) {
     if (changeInfo.status != 'complete') return;
     
     var pi = new PageInfo (tab.url);
+    logger.add ('Loading <' + pi.url + '>...');
     pi.title = tab.title;
     pi.parsePageMetadata (tabId, function () {
       chrome.browserAction.setPopup ({
@@ -30,6 +34,8 @@
       // allFrames: true,
     });
   });
+  
+  logger.add ("background.html initialized");
 </script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****

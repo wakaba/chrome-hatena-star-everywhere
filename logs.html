@@ -1,19 +1,35 @@
-{
-  "name": "Hatena Star Everywhere",
-  "version": "1.0",
-  "description": "Show Hatena Star everywhere.",
-  "background_page": "background.html",
-  "options_page": "options.html",
-  "browser_action": {
-    "default_icon": "star.gif",
-    "popup": "entry.html"
-  },
-  "permissions": [
-    "tabs",
-    "http://*/*",
-    "https://*/*"
-  ]
-}
+<!DOCTYPE HTML>
+<title>Logs &mdash; Hatena Star Everywhere</title>
+<body>
+
+  <ul id=logs>
+    <li hidden class=template>
+      <span class=log-message></span>
+  </ul>
+
+<script>
+  var bg = chrome.extension.getBackgroundPage ();
+  var logger = bg.logger;
+  
+  var logs = document.getElementById ('logs');
+  var template = logs.getElementsByClassName ('template')[0];
+  
+  var insertLog = function (log) {
+    var li = template.cloneNode (true);
+    li.hidden = false;
+    li.className = '';
+    li.getElementsByClassName ('log-message')[0].textContent = log.message;
+    logs.insertBefore (li, logs.firstChild);
+  }; // insertLog
+  
+  logger.logs.forEach (insertLog);
+  
+  logger.onlog = insertLog;
+  addEventListener ('beforeunload', function () {
+    logger.onlog = null;
+  }, false);
+</script>
+<!--
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
  *
@@ -67,3 +83,4 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
+-->

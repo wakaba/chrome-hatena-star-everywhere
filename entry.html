@@ -32,6 +32,9 @@
     color: -webkit-link;
     font-family: monospace;
   }
+  code.entry-url:empty {
+    display: none;
+  }
   code.entry-url::before { content: "<" }
   code.entry-url::after { content: ">" }
   
@@ -114,6 +117,9 @@
   </ul>
 
   <script>
+    var bg = chrome.extension.getBackgroundPage ();
+    var logger = bg.logger;
+    
     var param = {};
     var query = (location.search || '').replace (/^\?/, '').split (/[&;]/).forEach (function (v) {
       var w = v.split (/=/, 2).map (function (v) { return decodeURIComponent (v) });
@@ -132,6 +138,8 @@
     }
     
     function openURL (url, title) {
+      logger.add ('Opening <' + url + '>...');
+      
       var pi = new PageInfo (url);
       pi.title = title;
       
