@@ -11,7 +11,13 @@
     if (changeInfo.status != 'complete') return;
     
     var pi = new PageInfo (tab.url);
-    logger.add ('Loading <' + pi.url + '>...');
+    if (pi.isAllowedURL ()) {
+      logger.add ('Loading <' + pi.url + '>...');
+    } else {
+      logger.add ('URL <' + pi.url + '> is not allowed');
+      return;
+    }
+    
     pi.title = tab.title;
     pi.parsePageMetadata (tabId, function () {
       chrome.browserAction.setPopup ({

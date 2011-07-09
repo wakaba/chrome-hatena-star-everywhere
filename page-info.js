@@ -10,6 +10,12 @@ PageInfo.prototype = {
   
   title: null,
   
+  isAllowedURL: function () {
+    var url = this.url;
+    if (!/^https?:\/\//.test (url)) return false;
+    return true;
+  }, // isAllowedURL
+  
   getEntryPopupURL: function () {
     return "entry.html?url=" + encodeURIComponent (this.url) + '&title=' + encodeURIComponent (this.title);
   }, // entryPopupURL
