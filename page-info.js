@@ -16,6 +16,40 @@ PageInfo.prototype = {
     return true;
   }, // isAllowedURL
   
+  isAutoRetrievalAllowedURL: function () {
+    // 1.
+    if (!this.isAllowedURL ()) {
+      return false;
+    }
+    
+    var url = this.url;
+    
+    // 2.
+    var disallowed = false;
+    try {
+      (localStorage['disallowed-urls'] || '^https://').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
+        if (new RegExp (pattern).test (url)) {
+          disallowed = true;
+          throw true;
+        }
+      });
+    } catch (e) { }
+    
+    if (disallowed) {
+      // 3.
+      try {
+        (localStorage['allowed-urls'] || '').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
+          if (new RegExp (pattern).test (url)) {
+            disallowed = false;
+            throw true;
+          }
+        });
+      } catch (e) { }
+    }
+    
+    return !disallowed;
+  }, // isAutoRetrievalAllowedURL
+  
   getEntryPopupURL: function () {
     return "entry.html?url=" + encodeURIComponent (this.url) + '&title=' + encodeURIComponent (this.title);
   }, // entryPopupURL

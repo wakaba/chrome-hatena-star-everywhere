@@ -2,9 +2,46 @@
 <title>Options &mdash; Hatena Star Everywhere</title>
 <body>
 
+<h1>Options</h1>
+
+<section>
+  <h2>URLs</h2>
+  
+  <table class=config>
+    <tr>
+      <th>
+        <p>1. Allowed URLs
+      <td>
+        <textarea readonly>^http://&#xa;^https://</textarea>
+    <tr>
+      <th>
+        <p>2. Disallowed URLs
+        <p>(Newline-separated regular expressions)
+      <td>
+        <textarea id=disallowed-urls data-default="^https://"></textarea>
+    <tr>
+      <th>
+        <p>3. Allowed URLs
+        <p>(Newline-separated regular expressions)
+      <td>
+        <textarea id=allowed-urls data-default=""></textarea>
+  </table>
+</section>
+
 <menu>
   <li><a href="logs.html">Logs</a>
 </menu>
+
+<script>
+  var ids = ['disallowed-urls', 'allowed-urls'];
+  ids.forEach (function (id) {
+    var el = document.getElementById (id);
+    el.value = localStorage[id] || el.getAttribute ('data-default') || '';
+    el.onchange = function () {
+      localStorage[id] = el.value;
+    };
+  });
+</script>
 
 <!--
 /* ***** BEGIN LICENSE BLOCK *****

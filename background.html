@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<title>Hatena Star Everywhere &mdash; Background Page</title>
+<title>Background page &mdash; Hatena Star Everywhere</title>
 <body>
 
 <script src="page-info.js"></script>
@@ -20,10 +20,29 @@
     
     pi.title = tab.title;
     pi.parsePageMetadata (tabId, function () {
+      if (this.url != tab.url) {
+        logger.add ('Canonical URL of page <' + tab.url + '> is <' + this.url + '>');
+        if (!pi.isAllowedURL ()) {
+          logger.add ('URL <' + pi.url + '> is not allowed');
+        }
+      }
+      
       chrome.browserAction.setPopup ({
         tabId: tabId,
         popup: pi.getEntryPopupURL (),
       });
+      
+      if (tab.incognito) {
+        if (this.url != tab.url) {
+          logger.add ('Stars for URL <' + pi.url + '> is not retrieved because the tab is in incognito mode');
+        }
+        return;
+      } else if (!pi.isAutoRetrievalAllowedURL ()) {
+        if (this.url != tab.url) {
+          logger.add ('Retrieval of stars for URL <' + pi.url + '> without explicit user action is not allowed');
+        }
+        return;
+      }
       
       pi.getTotalStarCount (function (n) {
         if (n > 0) {
@@ -34,6 +53,13 @@
         }
       });
     });
+    
+    if (tab.incognito) {
+      logger.add ('Stars for URL <' + pi.url + '> is not retrieved because the tab is in incognito mode');
+    } else if (!pi.isAutoRetrievalAllowedURL ()) {
+      logger.add ('Retrieval of stars for URL <' + pi.url + '> without explicit user action is not allowed');
+      return;
+    }
     
     chrome.tabs.executeScript (tabId, {
       file: 'load-hatena-star.js',
