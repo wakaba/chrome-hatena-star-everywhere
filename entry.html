@@ -3,9 +3,22 @@
 <script src="page-info.js"></script>
 <style>
   body {
+    margin: 0;
+    padding: 0;
     min-width: 20em;
     overflow-x: hidden;
   }
+  
+  header {
+    display: block;
+    margin: 0;
+    padding: 0.5em 0.3em 0.1em 0.3em;
+    background-color: #F3F3F3;
+    border: 1px solid #BBBBBB;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
   ul {
     margin: 0;
     padding: 0;
@@ -17,7 +30,7 @@
     line-height: 1.2;
   }
   
-  li p {
+  p {
     margin: 0;
   }
   
@@ -25,15 +38,21 @@
     vertical-align: baseline;
   }
   
+  a:hover {
+    background-color: #FFFFAA;
+  }
+  
   cite {
     font-style: normal;
     font-size: 100%;
     font-weight: bolder;
     font-family: sans-serif;
+    color: black;
   }
+  
   code.entry-url {
-    font-size: 70%;
-    color: -webkit-link;
+    font-size: 90%;
+    color: #A0A0A0;
     font-family: monospace;
   }
   code.entry-url:empty {
@@ -62,6 +81,13 @@
     color: #cd34e3;
   }
   
+  #total-star-count {
+    display: block;
+    margin: 0;
+    padding: 0.2em 0 0.1em 0;
+    text-align: center;
+    font-size: 130%;
+  }
   #total-star-count span {
     padding-left: 14px;
     background-position: left center;
@@ -83,8 +109,65 @@
     background-image: url(http://s.hatena.com/images/star-purple.gif);
   }
   
-  #user-avail-star-count {
+  #tabs {
     display: -webkit-box;
+    margin: 0.2em 0 0 0;
+    padding: 0;
+  }
+  #tabs .tab-button:not([hidden]) {
+    display: -webkit-box;
+    margin: 0 0.2em -1px 0.4em;
+    padding: 0;
+    min-width: 5em;
+    border-style: outset outset none outset;
+    border-width: 1px;
+    border-color: #BBBBBB;
+    border-bottom-color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position: relative;
+    z-index: 111;
+    overflow: hidden;
+    opacity: 0.6;
+  }
+  #tabs .tab-button.selected {
+    border-bottom-style: solid;
+    opacity: 1;
+  }
+  #tabs .tab-button + .tab-button {
+    margin-left: 0.1em;
+  }
+  #tabs .tab-button a {
+    display: block;
+    padding: 0.2em 0.3em;
+    text-decoration: none;
+    color: inherit ! important;
+    width: 100%;
+  }
+  #tabs .tab-button a:hover {
+    background-color: transparent;
+  }
+  #tabs img {
+    vertical-align: bottom;
+  }
+  
+  section {
+    display: none;
+    margin: 0;
+    padding: 0.2em;
+    border: #BBBBBB outset 1px;
+    border-radius: 3px;
+  }
+  section:target {
+    display: block;
+  }
+  
+  #stars {
+    text-align: center;
+  }
+  #user-avail-star-count {
+    display: -webkit-inline-box;
+    margin: 0.3em;
   }
   #user-avail-star-count p {
     display: -webkit-box;
@@ -100,18 +183,34 @@
     border-radius: 7px;
   }
   #user-avail-star-count button img {
-    margin: 0;
+    margin: -2px;
     padding: 0;
     vertical-align: bottom;
   }
   #user-avail-star-count button:disabled {
     opacity: 0.6;
   }
+  .add-star-purple[hidden] {
+    display: inline;
+    visibility: hidden;
+  }
+  
+  #stars .shop-link {
+    text-align: right;
+  }
+  #stars .shop-link a {
+    text-decoration: none;
+    color: inherit;
+  }
+  #stars .shop-link img {
+    vertical-align: baseline;
+  }
   
   #star-user-list li:not([hidden]),
   #star-comment-list li:not([hidden]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    margin: 0.3em 0.5em;
   }
   #star-user-list .star-user-star:not([hidden]),
   #star-comment-list .star-comment-star:not([hidden]) {
@@ -138,11 +237,20 @@
     -webkit-box-flex: 1;
   }
   
+  .nickname-link {
+    text-decoration: none !important;
+  }
+  
+  .star-user-quote, .star-comment-body {
+    margin: 0.1em 0.5em 0.1em 1em;
+    text-align: left;
+  }
+  
   .star-quote:empty {
     display: none !important;
   }
   .star-quote {
-    opacity: 0.3;
+    color: #CCCCCC;
     font-size: 80%;
   }
   
@@ -153,7 +261,7 @@
     border-radius: 10px;
     height: 15px;
     width: 15px;
-    opacity: 0.3;
+    opacity: 0.2;
   }
   #star-user-list li:hover .star-delete,
   #star-comment-list li:hover .comment-delete {
@@ -166,78 +274,102 @@
   
   textarea {
     height: 5em;
+    border: 1px inset #BBBBBB;
+  }
+  
+  form button {
+    background-color: transparent;
+    border: 1px outset #BBBBBB;
+  }
+  form button:active {
+    border-style: inset;
   }
 </style>
 <base target=_blank>
 <body>
 
-  <p id=star-entry-info>
-    <cite class=entry-title></cite>
-    <code class=entry-url></code>
+  <header>
+    <p id=star-entry-info>
+      <cite class=entry-title></cite>
+      <code class=entry-url></code>
 
-  <p id=total-star-count class=star-count hidden>
-    <span class=star-yellow></span>
-    <span class=star-green></span>
-    <span class=star-red></span>
-    <span class=star-blue></span>
-    <span class=star-purple hidden></span>
-
-  <div id=user-avail-star-count class=star-count>
-    <p><button type=button class=add-star-yellow><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
-    <span class=star-yellow>&#x221E;</span>
-    <p><button type=button class=add-star-green><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
-    <span class=star-green hidden></span>
-    <p><button type=button class=add-star-red><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
-    <span class=star-red hidden></span>
-    <p><button type=button class=add-star-blue><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
-    <span class=star-blue hidden></span>
-    <p><button type=button class=add-star-purple hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
-    <span class=star-purple hidden></span>
-  </div>
-
-  <ul id=star-user-list>
-    <li hidden class=template>
-      <span class=star-user-star>
-        <span class=star-user-count>
-          <img class=star-image><span class=star-count></span>
-        </span>
-        <span class=star-user-user>
-          <a class=profile-image-link><img alt class=profile-image></a>
-          <a class=nickname-link></a>
-        </span>
-        <button type=button class=star-delete><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete a star"></button>
-      </span>
-      <span class=star-user-quote>
-        <q class=star-quote></q>
-      </span>
-  </ul>
+    <p id=total-star-count class=star-count hidden>
+      <span class=star-yellow></span>
+      <span class=star-green></span>
+      <span class=star-red></span>
+      <span class=star-blue></span>
+      <span class=star-purple hidden></span>
+  </header>
   
-  <ul id=star-comment-list>
-    <li hidden class=template>
-      <p class=star-comment-star>
-        <span class=star-comment-user>
-          <a class=profile-image-link><img alt class=profile-image></a>
-          <a class=nickname-link></a>
+  <menu id=tabs>
+    <li id=menu-stars class=tab-button><a href="#stars" target=_self>Stars</a>
+    <li id=menu-comments class=tab-button hidden><a href="#comments" target=_self>Comments
+    (<span id=menu-comment-count>0</span>)
+    <img src="http://s.hatena.ne.jp/images/private.gif" alt="Private"></a>
+  </menu>
+
+  <section id=stars>
+    <div id=user-avail-star-count class=star-count>
+      <p><button type=button class=add-star-yellow><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
+      <span class=star-yellow>&#x221E;</span>
+      <p><button type=button class=add-star-green><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
+      <span class=star-green hidden></span>
+      <p><button type=button class=add-star-red><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
+      <span class=star-red hidden></span>
+      <p><button type=button class=add-star-blue><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
+      <span class=star-blue hidden></span>
+      <p><button type=button class=add-star-purple hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
+      <span class=star-purple hidden></span>
+    </div>
+    
+    <p class=shop-link><a href="https://www.hatena.com/shop/star"><img src="http://s.hatena.ne.jp/images/buy_star_cart_purple.gif" alt> Color star shop</a>
+
+    <ul id=star-user-list>
+      <li hidden class=template>
+        <span class=star-user-star>
+          <span class=star-user-count>
+            <img class=star-image><span class=star-count></span>
+          </span>
+          <span class=star-user-user>
+            <a class=profile-image-link><img alt class=profile-image></a>
+            <a class=nickname-link></a>
+          </span>
+          <button type=button class=star-delete><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete a star"></button>
         </span>
-        <button type=button class=comment-delete data-confirm="Do you really want to delete this comment?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this comment"></button>
-      <p class=star-comment-body>
-        <span class=comment-body></span>
-    <li id=star-comment-form hidden>
-      <form>
+        <span class=star-user-quote>
+          <q class=star-quote></q>
+        </span>
+    </ul>
+  </section>
+  
+  <section id=comments>
+    <ul id=star-comment-list>
+      <li hidden class=template>
         <p class=star-comment-star>
           <span class=star-comment-user>
             <a class=profile-image-link><img alt class=profile-image></a>
             <a class=nickname-link></a>
           </span>
+          <button type=button class=comment-delete data-confirm="Do you really want to delete this comment?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this comment"></button>
         <p class=star-comment-body>
-          <textarea name=body class=comment-body></textarea>
-          <span class=comment-submit>
-            <button type=submit name=submit>Send</button>
-            <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
-          </span>
-      </form>
-  </ul>
-
+          <span class=comment-body></span>
+      <li id=star-comment-form hidden>
+        <form>
+          <p class=star-comment-star>
+            <span class=star-comment-user>
+              <a class=profile-image-link><img alt class=profile-image></a>
+              <a class=nickname-link></a>
+            </span>
+          <p class=star-comment-body>
+            <textarea name=body class=comment-body></textarea>
+            <span class=comment-submit>
+              <button type=submit name=submit>Send</button>
+              <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
+            </span>
+        </form>
+    </ul>
+  </section>
+  
   <script>
     var bg = chrome.extension.getBackgroundPage ();
     var logger = bg.logger;
@@ -260,6 +392,31 @@
     if (param.url) {
       setTimeout (function () { openURL (param.url, param.title) }, 1);
     }
+    
+    getMyInfo (function (json) {
+      var name = json.url_name;
+      if (name) {
+        var css = 'li[data-star-user-name="' + name + '"] .star-delete, li[data-comment-user-name="' + name + '"] .comment-delete { display: block !important }';
+        var style = document.createElement ('style');
+        style.textContent = css;
+        document.body.appendChild (style);
+      }
+    });
+    
+    var tabs = document.getElementById ('tabs');
+    var tabButtons = tabs.getElementsByClassName ('tab-button');
+    var tabButtonsL = tabButtons.length;
+    for (var i = 0; i < tabButtonsL; i++) (function (button) {
+      button.onclick = function () {
+        for (var i = 0; i < tabButtonsL; i++) {
+          tabButtons[i].classList.remove ('selected');
+        }
+        button.classList.add ('selected');
+      };
+    }) (tabButtons[i]);
+    tabButtons[0].classList.add ('selected');
+    
+    location.href = '#stars';
     
     function openURL (url, title) {
       logger.add ('Opening <' + url + '>...');
@@ -302,9 +459,11 @@
       });
       totalStarCountEl.hidden = total == 0;
       
-      chrome.tabs.getSelected (null, function (tab) {
-        if (tab) bg.updateBAStarCount (tab.id, total);
-      });
+      if (total > 0) {
+        chrome.tabs.getSelected (null, function (tab) {
+          if (tab) bg.updateBAStarCount (tab.id, total);
+        });
+      }
     } // showTotalStarCounts
     
     function showEntry (json) {
@@ -373,6 +532,8 @@
       
       if (canComment) {
         starCommentForm.hidden = false;
+        document.getElementById ('menu-comments').hidden = false;
+        document.getElementById ('menu-comment-count').textContent = comments.length;
         getMyInfo (function (json) {
           var urlName = json.url_name;
           var nickname = json.display_name;
@@ -387,6 +548,7 @@
         starCommentForm.getElementsByTagName ('form')[0].onsubmit = function () {
           var form = this;
           var body = form.elements.body.value;
+          if (body == '') return false;
           postStarComment ({
             url: self.pageInfo.url,
             title: self.pageInfo.title,
@@ -574,16 +736,6 @@
       };
       xhr.send (null);
     } // getMyInfo
-    
-    getMyInfo (function (json) {
-      var name = json.url_name;
-      if (name) {
-        var css = 'li[data-star-user-name="' + name + '"] .star-delete, li[data-comment-user-name="' + name + '"] .comment-delete { display: block !important }';
-        var style = document.createElement ('style');
-        style.textContent = css;
-        document.body.appendChild (style);
-      }
-    });
   </script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****
