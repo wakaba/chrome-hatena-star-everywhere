@@ -1,0 +1,343 @@
+  body {
+    margin: 0;
+    padding: 0;
+    min-width: 20em;
+    overflow-x: hidden;
+  }
+  
+  header {
+    display: block;
+    margin: 0;
+    padding: 0.5em 0.3em 0.1em 0.3em;
+    background-color: #F3F3F3;
+    border: 1px solid #BBBBBB;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  ul li:not([hidden]) {
+    display: block;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  img {
+    vertical-align: baseline;
+  }
+  
+  a:hover {
+    background-color: #FFFFAA;
+  }
+  
+  cite {
+    font-style: normal;
+    font-size: 100%;
+    font-weight: bolder;
+    font-family: sans-serif;
+    color: black;
+  }
+  
+  code.entry-url {
+    font-size: 90%;
+    color: #A0A0A0;
+    font-family: monospace;
+  }
+  code.entry-url:empty {
+    display: none;
+  }
+  code.entry-url::before { content: "<" }
+  code.entry-url::after { content: ">" }
+  
+  .star-count {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  .star-yellow {
+    color: #F4B128;
+  }
+  .star-green {
+    color: #8ed701;
+  }
+  .star-red {
+    color: #ea475c;
+  }
+  .star-blue {
+    color: #57b1ff;
+  }
+  .star-purple {
+    color: #cd34e3;
+  }
+  
+  #total-star-count {
+    display: block;
+    margin: 0;
+    padding: 0.2em 0 0.1em 0;
+    text-align: center;
+    font-size: 130%;
+  }
+  #total-star-count span {
+    padding-left: 14px;
+    background-position: left center;
+    background-repeat: no-repeat;
+  }
+  #total-star-count .star-yellow {
+    background-image: url(http://s.hatena.com/images/star-yellow.gif);
+  }
+  #total-star-count .star-green {
+    background-image: url(http://s.hatena.com/images/star-green.gif);
+  }
+  #total-star-count .star-red {
+    background-image: url(http://s.hatena.com/images/star-red.gif);
+  }
+  #total-star-count .star-blue {
+    background-image: url(http://s.hatena.com/images/star-blue.gif);
+  }
+  #total-star-count .star-purple {
+    background-image: url(http://s.hatena.com/images/star-purple.gif);
+  }
+  
+  #tabs {
+    display: -webkit-box;
+    margin: 0.2em 0 0 0;
+    padding: 0;
+  }
+  #tabs .tab-button:not([hidden]) {
+    display: -webkit-box;
+    margin: 0 0.2em -1px 0.4em;
+    padding: 0;
+    min-width: 5em;
+    border-style: outset outset none outset;
+    border-width: 1px;
+    border-color: #BBBBBB;
+    border-bottom-color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position: relative;
+    z-index: 111;
+    overflow: hidden;
+    opacity: 0.6;
+  }
+  #tabs .tab-button.selected {
+    border-bottom-style: solid;
+    opacity: 1;
+  }
+  #tabs .tab-button + .tab-button {
+    margin-left: 0.1em;
+  }
+  #tabs .tab-button a {
+    display: block;
+    padding: 0.2em 0.3em;
+    text-decoration: none;
+    color: inherit ! important;
+    width: 100%;
+  }
+  #tabs .tab-button a:hover {
+    background-color: transparent;
+  }
+  #tabs img {
+    vertical-align: bottom;
+  }
+  
+  section {
+    display: none;
+    margin: 0;
+    padding: 0.2em;
+    border: #BBBBBB outset 1px;
+    border-radius: 3px;
+    height: 20em;
+    max-height: 30em;
+    overflow: auto;
+  }
+  section:target {
+    display: block;
+  }
+  
+  #stars {
+    text-align: center;
+  }
+  #user-avail-star-count {
+    display: -webkit-inline-box;
+    margin: 0.3em;
+  }
+  #user-avail-star-count p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  #user-avail-star-count p > *:not([hidden]) {
+    display: block;
+    text-align: center;
+  }
+  #user-avail-star-count button {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 7px;
+  }
+  #user-avail-star-count button img {
+    margin: -2px;
+    padding: 0;
+    vertical-align: bottom;
+  }
+  #user-avail-star-count button:disabled {
+    opacity: 0.6;
+  }
+  .add-star-purple[hidden] {
+    display: inline;
+    visibility: hidden;
+  }
+  
+  #stars .shop-link {
+    text-align: right;
+  }
+  #stars .shop-link a {
+    text-decoration: none;
+    color: inherit;
+  }
+  #stars .shop-link img {
+    vertical-align: baseline;
+  }
+  
+  #star-comment-list {
+    margin-top: 0.5em;
+  }
+  
+  #star-user-list li:not([hidden]),
+  #star-comment-list li:not([hidden]) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    margin: 0.3em 0.5em;
+  }
+  #star-user-list .star-user-star:not([hidden]),
+  #star-comment-list .star-comment-star:not([hidden]) {
+    display: -webkit-box;
+  }
+  #star-user-list .star-user-star > *:not([hidden]),
+  #star-comment-list .star-comment-star > *:not([hidden]) {
+    display: -webkit-box;
+  }
+  #star-user-list .star-user-count {
+    min-width: 3em;
+  }
+  #star-user-list .star-user-user,
+  #star-comment-list .star-comment-user {
+    -webkit-box-flex: 1;
+  }
+  #star-user-list .star-user-quote,
+  #star-comment-list .star-comment-body {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  #star-comment-list .star-comment-body > *:not([hidden]) {
+    display: -webkit-box;
+    -webkit-box-flex: 1;
+  }
+  
+  .nickname-link {
+    text-decoration: none !important;
+  }
+  
+  .star-user-quote, .star-comment-body {
+    margin: 0.1em 0.5em 0.1em 1em;
+    text-align: left;
+  }
+  
+  .star-quote:empty {
+    display: none !important;
+  }
+  .star-quote {
+    color: #CCCCCC;
+    font-size: 80%;
+  }
+  
+  .star-delete, .comment-delete {
+    display: none !important;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 10px;
+    height: 15px;
+    width: 15px;
+    opacity: 0.2;
+  }
+  #star-user-list li:hover .star-delete,
+  #star-comment-list li:hover .comment-delete {
+    opacity: 1;
+  }
+  .star-delete img,
+  .comment-delete img {
+    vertical-align: top;
+  }
+  
+  textarea {
+    height: 5em;
+    border: 1px inset #BBBBBB;
+  }
+  
+  form button {
+    background-color: transparent;
+    border: 1px outset #BBBBBB;
+  }
+  form button:active {
+    border-style: inset;
+  }
+  
+/* ***** BEGIN LICENSE BLOCK *****
+ * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the same terms as Perl itself.
+ *
+ * Alternatively, the contents of this file may be used 
+ * under the following terms (the "MPL/GPL/LGPL"), 
+ * in which case the provisions of the MPL/GPL/LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of the MPL/GPL/LGPL, and not to allow others to
+ * use your version of this file under the terms of the Perl, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the MPL/GPL/LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the Perl or the MPL/GPL/LGPL.
+ *
+ * "MPL/GPL/LGPL":
+ *
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <http://www.mozilla.org/MPL/>
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Hatena Star Everywhere code.
+ *
+ * The Initial Developer of the Original Code is Wakaba.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Wakaba <w@suika.fam.cx>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the LGPL or the GPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
