@@ -17,6 +17,10 @@
     line-height: 1.2;
   }
   
+  li p {
+    margin: 0;
+  }
+  
   img {
     vertical-align: baseline;
   }
@@ -104,23 +108,34 @@
     opacity: 0.6;
   }
   
-  #star-user-list li:not([hidden]) {
+  #star-user-list li:not([hidden]),
+  #star-comment-list li:not([hidden]) {
     display: -webkit-box;
     -webkit-box-orient: vertical;
   }
-  #star-user-list .star-user-star:not([hidden]) {
+  #star-user-list .star-user-star:not([hidden]),
+  #star-comment-list .star-comment-star:not([hidden]) {
     display: -webkit-box;
   }
-  #star-user-list .star-user-star > *:not([hidden]) {
+  #star-user-list .star-user-star > *:not([hidden]),
+  #star-comment-list .star-comment-star > *:not([hidden]) {
     display: -webkit-box;
   }
   #star-user-list .star-user-count {
     min-width: 3em;
   }
-  #star-user-list .star-user-user {
+  #star-user-list .star-user-user,
+  #star-comment-list .star-comment-user {
     -webkit-box-flex: 1;
   }
-  #star-user-list .star-quote {
+  #star-user-list .star-user-quote,
+  #star-comment-list .star-comment-body {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  #star-comment-list .star-comment-body > *:not([hidden]) {
+    display: -webkit-box;
+    -webkit-box-flex: 1;
   }
   
   .star-quote:empty {
@@ -130,7 +145,8 @@
     opacity: 0.3;
     font-size: 80%;
   }
-  .star-delete {
+  
+  .star-delete, .comment-delete {
     display: none !important;
     background-color: transparent;
     padding: 0;
@@ -139,11 +155,17 @@
     width: 15px;
     opacity: 0.3;
   }
-  #star-user-list li:hover .star-delete {
+  #star-user-list li:hover .star-delete,
+  #star-comment-list li:hover .comment-delete {
     opacity: 1;
   }
-  .star-delete img {
+  .star-delete img,
+  .comment-delete img {
     vertical-align: top;
+  }
+  
+  textarea {
+    height: 5em;
   }
 </style>
 <base target=_blank>
@@ -192,9 +214,28 @@
   
   <ul id=star-comment-list>
     <li hidden class=template>
-      <a class=profile-image-link><img alt class=profile-image></a>
-      <a class=nickname-link></a>
-      <span class=comment-body></span>
+      <p class=star-comment-star>
+        <span class=star-comment-user>
+          <a class=profile-image-link><img alt class=profile-image></a>
+          <a class=nickname-link></a>
+        </span>
+        <button type=button class=comment-delete data-confirm="Do you really want to delete this comment?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this comment"></button>
+      <p class=star-comment-body>
+        <span class=comment-body></span>
+    <li id=star-comment-form hidden>
+      <form>
+        <p class=star-comment-star>
+          <span class=star-comment-user>
+            <a class=profile-image-link><img alt class=profile-image></a>
+            <a class=nickname-link></a>
+          </span>
+        <p class=star-comment-body>
+          <textarea name=body class=comment-body></textarea>
+          <span class=comment-submit>
+            <button type=submit name=submit>Send</button>
+            <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
+          </span>
+      </form>
   </ul>
 
   <script>
@@ -214,6 +255,7 @@
     var starUserTemplate = starUserList.getElementsByClassName ('template')[0];
     var starCommentList = document.getElementById ('star-comment-list');
     var starCommentTemplate = starCommentList.getElementsByClassName ('template')[0];
+    var starCommentForm = document.getElementById ('star-comment-form');
     
     if (param.url) {
       setTimeout (function () { openURL (param.url, param.title) }, 1);
@@ -274,8 +316,8 @@
       if (json.stars) {
         showStars ('yellow', json.stars);
       }
-      if (json.comments && json.comments.length) {
-        showStarComments (json.comments);
+      if (json.comments) {
+        showStarComments (json.comments, parseInt (json.can_comment));
       }
     } // showEntry
     
@@ -326,23 +368,81 @@
       });
     } // showStars
     
-    function showStarComments (comments) {
-      comments.forEach (function (comment) {
-        var urlName = comment.name;
-        var nickname = urlName;
-        var userURL = 'http://www.hatena.com/' + urlName + '/';
-        var li = starCommentTemplate.cloneNode (true);
-        li.hidden = false;
-        li.getElementsByClassName ('profile-image-link')[0].href = userURL;
-        li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-        var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
-        nicknameEl.href = userURL;
-        nicknameEl.textContent = nickname;
-        nicknameEl.title = 'id:' + urlName;
-        li.getElementsByClassName ('comment-body')[0].textContent = comment.body.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
-        starCommentList.appendChild (li);
-      });
+    function showStarComments (comments, canComment) {
+      comments.forEach (insertStarComment);
+      
+      if (canComment) {
+        starCommentForm.hidden = false;
+        getMyInfo (function (json) {
+          var urlName = json.url_name;
+          var nickname = json.display_name;
+          var userURL = 'http://www.hatena.com/' + urlName + '/';
+          starCommentForm.getElementsByClassName ('profile-image-link')[0].href = userURL;
+          starCommentForm.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+          var nicknameEl = starCommentForm.getElementsByClassName ('nickname-link')[0];
+          nicknameEl.href = userURL;
+          nicknameEl.textContent = nickname;
+          nicknameEl.title = 'id:' + urlName;
+        });
+        starCommentForm.getElementsByTagName ('form')[0].onsubmit = function () {
+          var form = this;
+          var body = form.elements.body.value;
+          postStarComment ({
+            url: self.pageInfo.url,
+            title: self.pageInfo.title,
+            body: body,
+          }, function (json) {
+            insertStarComment (json);
+            form.elements.submit.disabled = false;
+            form.getElementsByClassName ('indicator')[0].hidden = true;
+          });
+          form.elements.body.value = '';
+          form.elements.submit.disabled = true;
+          form.getElementsByClassName ('indicator')[0].hidden = false;
+          return false;
+        };
+      }
     } // showStarComments
+    
+    function postStarComment (args, nextCode) {
+      var self = this;
+      bg.getRKS (function (rks) {
+        var xhr = new XMLHttpRequest ();
+        var postURL = 'http://s.hatena.com/comment.add.json?uri=' + encodeURIComponent (args.url) + '&title=' + encodeURIComponent (args.title) + '&body=' + encodeURIComponent (args.body) + '&rks=' + encodeURIComponent (rks);
+        xhr.open ('GET', postURL, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
+            if (xhr.status < 400) {
+              var json = JSON.parse (xhr.responseText);
+              nextCode.apply (self, [json]);
+            }
+          }
+        };
+        xhr.send (null);
+      });
+    } // postStarComment
+    
+    function insertStarComment (comment) {
+      var urlName = comment.name;
+      var nickname = urlName;
+      var userURL = 'http://www.hatena.com/' + urlName + '/';
+      var li = starCommentTemplate.cloneNode (true);
+      li.hidden = false;
+      li.getElementsByClassName ('profile-image-link')[0].href = userURL;
+      li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+      var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
+      nicknameEl.href = userURL;
+      nicknameEl.textContent = nickname;
+      nicknameEl.title = 'id:' + urlName;
+      li.getElementsByClassName ('comment-body')[0].textContent = comment.body.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
+      li.getElementsByClassName ('comment-delete')[0].onclick = function () {
+        if (confirm (this.getAttribute ('data-confirm'))) {
+          deleteStarComment (comment.id, li);
+        }
+      };
+      li.setAttribute ('data-comment-user-name', comment.name);
+      starCommentList.insertBefore (li, starCommentForm);
+    } // json
     
     function updateAvailUserStarCounts () {
       self.pageInfo.getAvailUserStarCounts (function (counts) {
@@ -398,7 +498,7 @@
     } // addStar
     
     function deleteStar (color, quote, li) {
-      chrome.extension.getBackgroundPage ().getRKS (function (rks) {
+      bg.getRKS (function (rks) {
         var xhr = new XMLHttpRequest ();
         var deleteURL = 'http://s.hatena.com/star.delete.json?uri=' + encodeURIComponent (self.pageInfo.url) + '&quote=' + encodeURIComponent (quote) + '&color=' + encodeURIComponent (color) + '&rks=' + encodeURIComponent (rks);
         xhr.open ('GET', deleteURL, true);
@@ -428,15 +528,45 @@
       });
     } // deleteStar
     
+    function deleteStarComment (id, li) {
+      bg.getRKS (function (rks) {
+        var xhr = new XMLHttpRequest ();
+        var deleteURL = 'http://s.hatena.com/comment.delete.json?comment_id=' + encodeURIComponent (id) + '&rks=' + encodeURIComponent (rks);
+        xhr.open ('GET', deleteURL, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
+            if (xhr.status < 400) {
+              var json = JSON.parse (xhr.responseText);
+              if (json && json.result && parseInt (json.result)) {
+                //
+              } else {
+                li.hidden = false;
+              }
+            }
+          }
+        };
+        xhr.send (null);
+        li.hidden = true;
+      });
+    }
+    
     function getMyInfo (nextCode) {
       var self = this;
+      if (self.myInfo) {
+        setTimeout (function () {
+          nextCode.apply (self, [self.myInfo]);
+        }, 1);
+        return;
+      }
+      
       var xhr = new XMLHttpRequest ();
-      xhr.open ('GET', 'http://n.hatena.com/applications/my.json', false);
+      xhr.open ('GET', 'http://n.hatena.com/applications/my.json', true);
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if (xhr.status < 400) {
             var json = JSON.parse (xhr.responseText);
             if (json) {
+              self.myInfo = json;
               nextCode.apply (self, [json]);
             }
           }
@@ -448,7 +578,7 @@
     getMyInfo (function (json) {
       var name = json.url_name;
       if (name) {
-        var css = 'li[data-star-user-name="' + name + '"] .star-delete { display: block !important }';
+        var css = 'li[data-star-user-name="' + name + '"] .star-delete, li[data-comment-user-name="' + name + '"] .comment-delete { display: block !important }';
         var style = document.createElement ('style');
         style.textContent = css;
         document.body.appendChild (style);
