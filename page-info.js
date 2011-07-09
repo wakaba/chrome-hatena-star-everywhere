@@ -27,7 +27,7 @@ PageInfo.prototype = {
     // 2.
     var disallowed = false;
     try {
-      (localStorage['disallowed-urls'] || '^https://').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
+      (localStorage['disallowed-urls'] || '^https://\n^http://[^/.]+/').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
         if (new RegExp (pattern).test (url)) {
           disallowed = true;
           throw true;

@@ -109,7 +109,7 @@
       <h3>2. Disallowed URLs</h3>
       <p>(Newline-separated regular expressions)
     </hgroup>
-    <p><textarea id=disallowed-urls data-default="^https://"></textarea>
+    <p><textarea id=disallowed-urls data-default="^https://&#xa;^http://[^/.]+/"></textarea>
   </section>
   
   <section>
@@ -119,6 +119,14 @@
     </hgroup>
     <p><textarea id=allowed-urls data-default=""></textarea>
   </section>
+  
+  <p><button type=button onclick="
+    if (confirm(this.getAttribute ('data-confirm'))) {
+      delete localStorage['allowed-urls'];
+      delete localStorage['disallowed-urls'];
+      location.reload ();
+    }
+  " data-confirm="Do you really want to revert all your changes?">Use default</button>
 </section>
 
 <section id=devel>
