@@ -13,8 +13,12 @@ if (/(?:^|\.)s[^.]*\.hatena\.(?:ne\.jp|com)/.test (location.hostname)) {
       var a = document.createElement ('a');
       a.className = 'icon-arrow2-blue';
       a.href = chrome.extension.getURL ('options.html');
-      a.textContent = 'Options of Hatena Star Everywhere';
+      a.textContent = chrome.i18n.getMessage ('options_full');
       more.appendChild (a);
+      
+      var style = document.createElement ('style');
+      style.textContent = '#top-box p.more a { display: block; margin-left: 200px; text-align: left }';
+      document.body.appendChild (style);
     }
   }
 }

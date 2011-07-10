@@ -6,7 +6,7 @@ UserConfig.prototype = {
   defaultValues: {
     allowedURLs: '^https://[^/]+\\.hatena\\.(?:ne\\.jp|com)/',
     disallowedURLs: '^https://\n^http://[^/.]+/',
-    tld: 'jp',
+    tld: /^ja(?:_|$)/.test (chrome.i18n.getMessage ('@@ui_locale')) ? 'jp' : 'com',
     iconType: 'default',
     nameType: 'nickname',
   }, // defaultValues
