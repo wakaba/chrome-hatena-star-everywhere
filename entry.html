@@ -1,4 +1,9 @@
 <!DOCTYPE HTML>
+<html lang=en
+    data-user-template="
+      <a class=profile-image-link><img alt class=profile-image></a><!--
+      --><a class=nickname-link></a>
+    ">
 <title>Stars</title>
 <script src="page-info.js"></script>
 <link rel=stylesheet href="entry-style.css">
@@ -28,103 +33,103 @@
   </menu>
 
   <section id=stars>
-    <p class=star-comment-star>
-      <span class=star-user-user>
-        <a class=profile-image-link><img alt class=profile-image></a>
-        <a class=nickname-link></a>
-      </span>
-    </span>
-    <div id=user-avail-star-count class=star-count>
-      <p><button type=button class=add-star-yellow><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
-      <span class=star-yellow>&#x221E;</span>
-      <p><button type=button class=add-star-green><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
-      <span class=star-green hidden></span>
-      <p><button type=button class=add-star-red><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
-      <span class=star-red hidden></span>
-      <p><button type=button class=add-star-blue><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
-      <span class=star-blue hidden></span>
-      <p><button type=button class=add-star-purple hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
-      <span class=star-purple hidden></span>
-    </div>
+    <article>
+      <h1>
+        <span class=user-info></span>
+        <span class=section-info>Add stars</span>
+      </h1>
+      <div id=user-avail-star-count class=star-count>
+        <p><button type=button class=add-star-yellow><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
+        <span class=star-yellow>&#x221E;</span>
+        <p><button type=button class=add-star-green><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
+        <span class=star-green hidden></span>
+        <p><button type=button class=add-star-red><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
+        <span class=star-red hidden></span>
+        <p><button type=button class=add-star-blue><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
+        <span class=star-blue hidden></span>
+        <p><button type=button class=add-star-purple hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
+        <span class=star-purple hidden></span>
+      </div>
+      <footer class=more>
+        <a href="https://www.hatena.com/shop/star"><img src="http://s.hatena.ne.jp/images/buy_star_cart_purple.gif" alt> Color star shop</a>
+      </footer>
+    </article>
     
-    <p class=shop-link><a href="https://www.hatena.com/shop/star"><img src="http://s.hatena.ne.jp/images/buy_star_cart_purple.gif" alt> Color star shop</a>
-
-    <h1 class=star-comment-star>Stars</h1>
-    <ul id=star-user-list>
-      <li hidden class=template>
-        <span class=star-user-star>
-          <span class=star-user-count>
-            <img class=star-image><span class=star-count></span>
+    <article>
+      <h1>Stars</h1>
+      
+      <ul id=star-user-list>
+        <li hidden class=template>
+          <span class=star-user-star>
+            <span class=star-user-count>
+              <img class=star-image><span class=star-count></span>
+            </span>
+            <span class=user-info></span>
+            <button type=button class=delete-button><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete a star"></button>
           </span>
-          <span class=star-user-user>
-            <a class=profile-image-link><img alt class=profile-image></a>
-            <a class=nickname-link></a>
+          <span class=star-user-quote>
+            <q class=star-quote></q>
           </span>
-          <button type=button class=star-delete><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete a star"></button>
-        </span>
-        <span class=star-user-quote>
-          <q class=star-quote></q>
-        </span>
-    </ul>
+      </ul>
+    </article>
   </section>
   
   <section id=comments>
-    <ul id=star-comment-list>
-      <li hidden class=template>
-        <p class=star-comment-star>
-          <span class=star-comment-user>
-            <a class=profile-image-link><img alt class=profile-image></a>
-            <a class=nickname-link></a>
-          </span>
-          <button type=button class=comment-delete data-confirm="Do you really want to delete this comment?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this comment"></button>
-        <p class=star-comment-body>
+    <div id=star-comment-list>
+      <article hidden class=template>
+        <h1>
+          <span class=user-info></span>
+          <button type=button class=delete-button data-confirm="Do you really want to delete this comment?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this comment"></button>
+        </h1>
+        <p>
           <span class=comment-body></span>
-      <li id=star-comment-form hidden>
+      </article>
+      <article id=star-comment-form hidden>
+        <h1>
+          <span class=user-info></span>
+          <span class=section-info>Send a comment</span>
+        </h1>
         <form>
-          <p class=star-comment-star>
-            <span class=star-comment-user>
-              <a class=profile-image-link><img alt class=profile-image></a>
-              <a class=nickname-link></a>
-            </span>
-          <p class=star-comment-body>
+          <p>
             <textarea name=body class=comment-body></textarea>
-            <span class=comment-submit>
-              <button type=submit name=submit>Send</button>
-              <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
-            </span>
+          <footer>
+            <button type=submit name=submit class=submit-button>Send</button>
+            <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
+          </footer>
         </form>
-    </ul>
+      </article>
+    </div>
   </section>
   
   <section id=notes>
-    <ul id=haiku-note-list>
-      <li id=haiku-note-form hidden>
+    <div id=haiku-note-list>
+      <article id=haiku-note-form hidden>
+        <h1>
+          <span class=user-info></span>
+          <span class=section-info>Add a note</span>
+        </h1>
         <form>
-          <p class=star-comment-star>
-            <span class=star-comment-user>
-              <a class=profile-image-link><img alt class=profile-image></a>
-              <a class=nickname-link></a>
-            </span>
-          <p class=star-comment-body>
+          <p>
             <textarea name=body class=entry-body></textarea>
-            <span class=comment-submit>
-              <button type=submit name=submit>Send</button>
-              <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
-            </span>
+          <footer>
+            <button type=submit name=submit class=submit-button>Send</button>
+            <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
+          </footer>
         </form>
-      <li hidden class=template>
-        <p class=star-comment-star>
-          <span class=star-comment-user>
-            <a class=profile-image-link><img alt class=profile-image></a>
-            <a class=nickname-link></a>
-          </span>
-          <time class=entry-timestamp></time>
-          <button type=button class=entry-delete data-confirm="Do you really want to delete this entry?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this entry"></button>
-        <p class=star-comment-body>
+      </article>
+      <article hidden class=template>
+        <h1>
+          <span class=user-info></span>
+          <time class=timestamp></time>
+          <button type=button class=delete-button data-confirm="Do you really want to delete this entry?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this entry"></button>
+        </h1>
+        <p>
           <span class=entry-body></span>
-      <li class=more>
+      </article>
+      <footer class=more>
         <a href=""><img src="https://www.hatena.ne.jp/images/favicon/haiku.gif" alt=Haiku> More...</a>
-    </ul>
+      </footer>
+    </div>
   </section>
   
   <script src=entry-script.js charset=utf-8></script>

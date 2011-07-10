@@ -32,24 +32,15 @@
     
     getMyInfo (function (json) {
       var urlName = json.url_name;
-      var myself = document.getElementById ('stars').getElementsByClassName ('star-comment-star')[0];
       if (urlName) {
-        var css = 'li[data-star-user-name="' + urlName + '"] .star-delete, li[data-comment-user-name="' + urlName + '"] .comment-delete, li[data-entry-user-name="' + urlName + '"] .entry-delete { display: block !important }';
+        var css = 'article[data-owner-url-name="' + urlName + '"] .delete-button, li[data-owner-url-name="' + urlName + '"] .delete-button { display: block !important }';
         var style = document.createElement ('style');
         style.textContent = css;
         document.body.appendChild (style);
-        
-        var nickname = urlName;
-        var userURL = 'http://www.hatena.com/' + urlName + '/';
-        myself.getElementsByClassName ('profile-image-link')[0].href = userURL;
-        myself.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-        var nicknameEl = myself.getElementsByClassName ('nickname-link')[0];
-        nicknameEl.href = userURL;
-        nicknameEl.textContent = nickname;
-        nicknameEl.title = 'id:' + urlName;
-      } else {
-        
       }
+      
+      var user = new UserInfo ({nanoJSON: json});
+      user.fillHTML (document.getElementById ('stars').getElementsByTagName ('h1')[0].getElementsByClassName ('user-info')[0]);
     });
     
     var tabs = document.getElementById ('tabs');
@@ -149,16 +140,10 @@
           return;
         }
         
-        var nickname = urlName;
-        var userURL = 'http://www.hatena.com/' + urlName + '/';
         var li = starUserTemplate.cloneNode (true);
         li.hidden = false;
-        li.getElementsByClassName ('profile-image-link')[0].href = userURL;
-        li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-        var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
-        nicknameEl.href = userURL;
-        nicknameEl.textContent = nickname;
-        nicknameEl.title = 'id:' + urlName;
+        var user = new UserInfo ({starJSON: star});
+        user.fillHTML (li.getElementsByClassName ('user-info')[0]);
         li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.com/images/star-' + color + '.gif';
         var starCount = li.getElementsByClassName ('star-count')[0];
         starCount.textContent = star.count || 1;
@@ -167,10 +152,10 @@
           li.getElementsByClassName ('star-quote')[0].textContent = star.quote.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
         }
         
-        li.getElementsByClassName ('star-delete')[0].onclick = function () {
+        li.getElementsByClassName ('delete-button')[0].onclick = function () {
           deleteStar (color, star.quote, li);
         };
-        li.setAttribute ('data-star-user-name', star.name);
+        li.setAttribute ('data-owner-url-name', star.name);
         
         starByUser[urlName] = starByUser[urlName] || {};
         starByUser[urlName][color] = starByUser[urlName][color] || {};
@@ -187,15 +172,8 @@
         document.getElementById ('menu-comments').hidden = false;
         document.getElementById ('menu-comment-count').textContent = comments.length;
         getMyInfo (function (json) {
-          var urlName = json.url_name;
-          var nickname = json.display_name;
-          var userURL = 'http://www.hatena.com/' + urlName + '/';
-          starCommentForm.getElementsByClassName ('profile-image-link')[0].href = userURL;
-          starCommentForm.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-          var nicknameEl = starCommentForm.getElementsByClassName ('nickname-link')[0];
-          nicknameEl.href = userURL;
-          nicknameEl.textContent = nickname;
-          nicknameEl.title = 'id:' + urlName;
+          var user = new UserInfo ({nanoJSON: json});
+          user.fillHTML (starCommentForm.getElementsByClassName ('user-info')[0]);
         });
         starCommentForm.getElementsByTagName ('form')[0].onsubmit = function () {
           var form = this;
@@ -237,25 +215,18 @@
     } // postStarComment
     
     function insertStarComment (comment) {
-      var urlName = comment.name;
-      var nickname = urlName;
-      var userURL = 'http://www.hatena.com/' + urlName + '/';
       var li = starCommentTemplate.cloneNode (true);
       li.hidden = false;
       li.className = '';
-      li.getElementsByClassName ('profile-image-link')[0].href = userURL;
-      li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-      var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
-      nicknameEl.href = userURL;
-      nicknameEl.textContent = nickname;
-      nicknameEl.title = 'id:' + urlName;
+      var user = new UserInfo ({starJSON: comment});
+      user.fillHTML (li.getElementsByClassName ('user-info')[0]);
       li.getElementsByClassName ('comment-body')[0].textContent = comment.body.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
-      li.getElementsByClassName ('comment-delete')[0].onclick = function () {
+      li.getElementsByClassName ('delete-button')[0].onclick = function () {
         if (confirm (this.getAttribute ('data-confirm'))) {
           deleteStarComment (comment.id, li);
         }
       };
-      li.setAttribute ('data-comment-user-name', comment.name);
+      li.setAttribute ('data-owner-url-name', comment.name);
       starCommentList.insertBefore (li, starCommentForm);
     } // json
     
@@ -397,17 +368,9 @@ function showHaikuEntries (entries) {
   haikuNoteMore.getElementsByTagName ('a')[0].href = 'http://h.hatena.ne.jp/target?word=' + encodeURIComponent (self.pageInfo.url);
   
   getMyInfo (function (json) {
-    var urlName = json.url_name;
-    var nickname = json.display_name;
-    var userURL = 'http://www.hatena.com/' + urlName + '/';
-
+    var user = new UserInfo ({nanoJSON: json});
+    user.fillHTML (haikuNoteForm.getElementsByClassName ('user-info')[0]);
     haikuNoteForm.hidden = false;
-    haikuNoteForm.getElementsByClassName ('profile-image-link')[0].href = userURL;
-    haikuNoteForm.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-    var nicknameEl = haikuNoteForm.getElementsByClassName ('nickname-link')[0];
-    nicknameEl.href = userURL;
-    nicknameEl.textContent = nickname;
-    nicknameEl.title = 'id:' + urlName;
   });
   haikuNoteForm.getElementsByTagName ('form')[0].onsubmit = function () {
     var form = this;
@@ -429,29 +392,22 @@ function showHaikuEntries (entries) {
 } // showHaikuEntries
 
 function insertHaikuEntry (entry) {
-  var urlName = entry.user.screen_name;
-  var nickname = entry.user.name;
-  var userURL = 'http://h.hatena.ne.jp/' + urlName + '/';
   var li = haikuNoteTemplate.cloneNode (true);
   li.hidden = false;
   li.className = '';
-  li.getElementsByClassName ('profile-image-link')[0].href = userURL;
-  li.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
-  var nicknameEl = li.getElementsByClassName ('nickname-link')[0];
-  nicknameEl.href = userURL;
-  nicknameEl.textContent = nickname;
-  nicknameEl.title = 'id:' + urlName;
+  var user = new UserInfo ({haikuJSON: entry.user});
+  user.fillHTML (li.getElementsByClassName ('user-info')[0]);
   var body = li.getElementsByClassName ('entry-body')[0];
   body.textContent = entry.text.substring (entry.keyword.length + 1);
-  li.getElementsByClassName ('entry-delete')[0].onclick = function () {
+  li.getElementsByClassName ('delete-button')[0].onclick = function () {
     if (confirm (this.getAttribute ('data-confirm'))) {
-      deleteHaikuEntry (entry.name, entry.id, function () {
+      deleteHaikuEntry (entry.user.name, entry.id, function () {
         li.hidden = true;
       });
     }
   };
-  li.getElementsByClassName ('entry-timestamp')[0].textContent = entry.created_at;
-  li.setAttribute ('data-entry-user-name', entry.user.screen_name);
+  li.getElementsByClassName ('timestamp')[0].textContent = entry.created_at;
+  li.setAttribute ('data-owner-url-name', entry.user.screen_name);
   haikuNoteList.insertBefore (li, haikuNoteMore);
 } // insertHaikuEntry
 

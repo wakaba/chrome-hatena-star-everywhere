@@ -162,6 +162,56 @@ PageInfo.prototype = {
   }, // getAvailUserStarCounts
 }; // PageInfo.prototype
 
+var UserInfo = function () {
+  this.init.apply (this, arguments);
+}; // UserInfo
+
+UserInfo.prototype = {
+  init: function (args) {
+    if (args.starJSON) {
+      this.urlName = args.starJSON.name;
+      this.displayName = args.starJSON.name;
+    } else if (args.haikuJSON) {
+      this.urlName = args.haikuJSON.screen_name;
+      this.displayName = args.haikuJSON.name;
+      this.hasNickname = true;
+    } else if (args.nanoJSON) {
+      this.urlName = args.nanoJSON.url_name;
+      this.displayName = args.nanoJSON.display_name;
+      this.hasNickname = true;
+    }
+  }, // init
+  
+  getURL: function () {
+    if (this.urlName) {
+      return 'http://www.hatena.com/' + this.urlName + '/';
+    } else {
+      return null;
+    }
+  }, // getURL
+  getIconURL: function () {
+    if (this.urlName) {
+      return 'http://n.hatena.com/' + this.urlName + '/profile/image?size=16';
+    } else {
+      return 'http://n.hatena.com/sample/profile/image?size=16&guest=1';
+    }
+  }, // getIconURL
+  
+  fillHTML: function (el) {
+    var template = document.documentElement.getAttribute ('data-user-template') || '';
+    el.innerHTML = template;
+    
+    var url = this.getURL ();
+    el.getElementsByClassName ('profile-image-link')[0].href = url;
+    el.getElementsByClassName ('profile-image')[0].src = this.getIconURL ();
+    var nicknameEl = el.getElementsByClassName ('nickname-link')[0];
+    nicknameEl.href = url;
+    nicknameEl.textContent = this.displayName;
+    nicknameEl.title = 'id:' + this.urlName
+  }, // fillHTML
+}; // UserInfo.prototype
+
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
  *
