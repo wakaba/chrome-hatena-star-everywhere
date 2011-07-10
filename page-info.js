@@ -9,6 +9,7 @@ PageInfo.prototype = {
   }, // init
   
   title: null,
+  config: null,
   
   isAllowedURL: function () {
     var url = this.url;
@@ -27,7 +28,7 @@ PageInfo.prototype = {
     // 2.
     var disallowed = false;
     try {
-      (localStorage['disallowed-urls'] || '^https://\n^http://[^/.]+/').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
+      this.config.get ('disallowedURLs').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
         if (new RegExp (pattern).test (url)) {
           disallowed = true;
           throw true;
@@ -38,7 +39,7 @@ PageInfo.prototype = {
     if (disallowed) {
       // 3.
       try {
-        (localStorage['allowed-urls'] || '').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
+        this.config.get ('allowedURLs').split (/\r?\n/).filter (function (s) { return !!s.length }).forEach (function (pattern) {
           if (new RegExp (pattern).test (url)) {
             disallowed = false;
             throw true;

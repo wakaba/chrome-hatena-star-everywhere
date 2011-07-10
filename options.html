@@ -109,7 +109,7 @@
       <h3>2. Disallowed URLs</h3>
       <p>(Newline-separated regular expressions)
     </hgroup>
-    <p><textarea id=disallowed-urls data-default="^https://&#xa;^http://[^/.]+/"></textarea>
+    <p><textarea id=disallowedURLs></textarea>
   </section>
   
   <section>
@@ -117,13 +117,13 @@
       <h3>3. Allowed URLs</h3>
       <p>(Newline-separated regular expressions)
     </hgroup>
-    <p><textarea id=allowed-urls data-default=""></textarea>
+    <p><textarea id=allowedURLs></textarea>
   </section>
   
   <p><button type=button onclick="
     if (confirm(this.getAttribute ('data-confirm'))) {
-      delete localStorage['allowed-urls'];
-      delete localStorage['disallowed-urls'];
+      config.delete ('allowedURLs');
+      config.delete ('disallowedURLs');
       location.reload ();
     }
   " data-confirm="Do you really want to revert all your changes?">Use default</button>
@@ -140,13 +140,15 @@
 </section>
 
 <script>
-  var ids = ['disallowed-urls', 'allowed-urls'];
+  var config = chrome.extension.getBackgroundPage ().config;
+
+  var ids = ['disallowedURLs', 'allowedURLs'];
   ids.forEach (function (id) {
     var el = document.getElementById (id);
-    el.value = localStorage[id] || el.getAttribute ('data-default') || '';
+    el.value = config.get (id);
     el.onchange = function () {
-      localStorage[id] = el.value;
-    };
+      config.set (id, el.value);
+    }; // onchange
   });
 </script>
 

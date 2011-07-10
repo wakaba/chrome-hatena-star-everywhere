@@ -3,9 +3,11 @@
 <body>
 
 <script src="page-info.js"></script>
+<script src=user-config.js charset=utf-8></script>
 <script src="logger.js"></script>
 <script>
   self.logger = new Logger ();
+  self.config = new UserConfig ();
 
   chrome.tabs.onUpdated.addListener (function (tabId, changeInfo, tab) {
     if (changeInfo.status != 'complete') return;
@@ -19,6 +21,7 @@
     }
     
     pi.title = tab.title;
+    pi.config = self.config;
     pi.parsePageMetadata (tabId, function () {
       if (this.url != tab.url) {
         logger.add ('Canonical URL of page <' + tab.url + '> is <' + this.url + '>');
