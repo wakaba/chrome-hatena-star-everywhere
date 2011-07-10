@@ -1,6 +1,6 @@
 {
   "name": "__MSG_hatenastar_everywhere__",
-  "version": "1.0",
+  "version": "1.3",
   "description": "__MSG_hatenastar_everywhere_desc__",
   "background_page": "background.html",
   "options_page": "options.html",
@@ -9,6 +9,7 @@
     "popup": "entry.html"
   },
   "default_locale": "en",
+  "update_url": "http://wakaba.github.com/packages/chrome/hatena-star-everywhere-update.xml",
   "permissions": [
     "tabs",
     "http://*/*",
