@@ -5,6 +5,11 @@ starScript.src = chrome.extension.getURL ('load-hatena-star-content.js?' + Math.
 starScript.charset = 'utf-8';
 document.body.appendChild (starScript);
 
+var iframe = document.createElement ('iframe');
+iframe.hidden = true;
+iframe.setAttribute ('data-hatena-star-chrome-entry-url', chrome.extension.getURL ('entry.html'));
+document.body.appendChild (iframe);
+
 if (/(?:^|\.)s[^.]*\.hatena\.(?:ne\.jp|com)/.test (location.hostname)) {
   var topBox = document.getElementById ('top-box');
   if (topBox) {
@@ -14,6 +19,12 @@ if (/(?:^|\.)s[^.]*\.hatena\.(?:ne\.jp|com)/.test (location.hostname)) {
       a.className = 'icon-arrow2-blue';
       a.href = chrome.extension.getURL ('options.html');
       a.textContent = chrome.i18n.getMessage ('options_full');
+      more.appendChild (a);
+      
+      a = document.createElement ('a');
+      a.className = 'icon-arrow2-blue';
+      a.href = '/siteconfig';
+      a.textContent = chrome.i18n.getMessage ('siteconfigwiki');
       more.appendChild (a);
       
       var style = document.createElement ('style');

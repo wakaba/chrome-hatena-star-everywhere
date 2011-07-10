@@ -66,9 +66,12 @@
       return;
     }
     
-    chrome.tabs.executeScript (tabId, {
-      file: 'load-hatena-star.js',
-      // allFrames: true,
+    pi.ifURLHasSiteConfig (function (domain, siteConfig) {
+      logger.add ('Use SiteConfig for domain "' + domain + '" (SiteConfig retrieved at ' + (new Date (PageInfo.siteConfigsTimestamp)) + ')');
+      chrome.tabs.executeScript (tabId, {
+        file: 'load-hatena-star.js',
+        // allFrames: true,
+      });
     });
   });
   

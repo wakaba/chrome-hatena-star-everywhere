@@ -3,6 +3,10 @@ var PageInfo = function () {
   this.init.apply (this, arguments);
 }; // PageInfo
 
+PageInfo.siteConfigs = {};
+PageInfo.siteConfigsTimestamp = 0;
+PageInfo.siteConfigsMaxAge = 60*60*24;
+
 PageInfo.prototype = {
   init: function (url) {
     this.url = url;
@@ -10,6 +14,31 @@ PageInfo.prototype = {
   
   title: null,
   config: null,
+  
+  getSiteConfigs: function (nextCode) {
+    var self = this;
+    var now = (new Date).getTime ();
+    if (this.siteConfigsTimestamp + this.siteConfigsMaxAge > now) {
+      setTimeout (function () {
+        nextCode.apply (self, [self.siteConfigs]);
+      }, 1);
+      return;
+    }
+    
+    var url = 'http://' + this.config.getDomain ('s') + '/siteconfig.json';
+    var xhr = new XMLHttpRequest ();
+    xhr.open ('GET', url, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var json = JSON.parse (xhr.responseText);
+          PageInfo.siteConfigsTimestamp = (new Date).getTime ();
+          nextCode.apply (self, [json]);
+        }
+      }
+    };
+    xhr.send (null);
+  }, // getSiteConfigs
   
   isAllowedURL: function () {
     var url = this.url;
@@ -50,6 +79,23 @@ PageInfo.prototype = {
     
     return !disallowed;
   }, // isAutoRetrievalAllowedURL
+  
+  ifURLHasSiteConfig: function (nextCode) {
+    var m = this.url.match (/^https?:\/\/([^/]+)\//);
+    var domain = m[1];
+    if (!domain) return;
+    var self = this;
+    this.getSiteConfigs (function (siteConfigs) {
+      var def = siteConfigs[domain];
+      if (!def) {
+        domain = domain.replace (/^[^.]+\./, '*.');
+        def = siteConfigs[def];
+      }
+      if (def) {
+        nextCode.apply (self, [domain, def]);
+      }
+    });
+  }, // ifURLHasSiteConfig
   
   getEntryPopupURL: function () {
     return "entry.html?url=" + encodeURIComponent (this.url) + '&title=' + encodeURIComponent (this.title);

@@ -7,6 +7,28 @@
   showStarScript.src = "http://s.hatena.com/js/HatenaStar.js";
   showStarScript.charset = 'utf-8';
   showStarScript.onload = function () {
+    var origShowButton = Hatena.Star.Entry.prototype.showButtons;
+    Hatena.Star.Entry.prototype.showButtons = function () {
+      origShowButton.apply (this, arguments);
+      this.showStarPanelButton ();
+    }; // showButtons
+    Hatena.Star.Entry.prototype.showStarPanelButton = function () {
+      var entry = this;
+      var button = document.createElement ('button');
+      button.style.backgroundColor = 'transparent';
+      button.style.padding = '0.1em';
+      button.style.borderRadius = '10px';
+      button.style.borderWidth = '1px';
+      button.innerHTML = '<img src="http://s.hatena.ne.jp/images/star-yellow.gif" alt=Stars title="Open Star Panel">'
+      button.onclick = function () {
+        var iframe = document.querySelector ('iframe[data-hatena-star-chrome-entry-url]');
+        if (!iframe) return;
+        iframe.src = iframe.getAttribute ('data-hatena-star-chrome-entry-url') + '?url=' + encodeURIComponent (entry.uri) + '&title=' + encodeURIComponent (entry.title);
+        iframe.hidden = false;
+      }; // onclick
+      this.star_container.insertBefore (button, this.addButton);
+    }; // showStarPanelButton
+    
     Hatena.Star.ConfigLoader.addEventListener ('load', function () { Hatena.Star.EntryLoader.loadNewEntries() });
     new Hatena.Star.ConfigLoader();
   }; // starScript.onload

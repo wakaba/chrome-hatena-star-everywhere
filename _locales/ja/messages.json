@@ -181,6 +181,12 @@
   },
   "logs": {
     "message": "ログ"
+  },
+  "siteconfig": {
+    "message": "SiteConfig"
+  },
+  "siteconfigwiki": {
+    "message": "SiteConfigWiki"
   }
 }
 

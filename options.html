@@ -90,14 +90,14 @@
   }
   
   .syntax-note {
-    font-size: 90%;
+    font-size: 80%;
   }
   .syntax-note::before { content: "(" }
   .syntax-note::after { content: ")" }
   
   menu li, ul li {
     margin: 0;
-    padding: 0.5em;
+    padding-left: 0.5em;
   }
   
   .actions li {
@@ -246,12 +246,16 @@
 
   <menu>
     <li><a href="logs.html" data-msgid=logs>Logs</a>
+    <li id=siteconfig><span data-msgid=siteconfig>SiteConfig</span>:
+    <time></time> <button type=button data-msgid=update>Update</button>
   </menu>
 </section>
 
 <script>
   var bg = chrome.extension.getBackgroundPage ();
   var config = bg.config;
+  
+  var PageInfo = bg.PageInfo;
 
   var ids = ['disallowedURLs', 'allowedURLs'];
   ids.forEach (function (id) {
@@ -303,6 +307,17 @@
     }; // onchange
   });
   document.getElementById ('nameType-' + config.get ('nameType')).checked = true;
+  
+  var siteConfig = document.getElementById ('siteconfig');
+  siteConfig.getElementsByTagName ('time')[0].textContent = new Date (PageInfo.siteConfigsTimestamp).toLocaleString ();
+  siteConfig.getElementsByTagName ('button')[0].onclick = function () {
+    PageInfo.siteConfigsTimestamp = 0;
+    var pi = new PageInfo ('http://www.hatena.com/');
+    pi.config = config;
+    pi.getSiteConfigs (function () {
+      siteConfig.getElementsByTagName ('time')[0].textContent = new Date (PageInfo.siteConfigsTimestamp).toLocaleString ();
+    });
+  }; // onclick
 </script>
 <script src=i18n.js charset=utf-8></script>
 
