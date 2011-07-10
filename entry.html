@@ -4,7 +4,7 @@
       <a class=profile-image-link><img alt class=profile-image></a><!--
       --><a class=nickname-link></a>
     ">
-<title>Stars</title>
+<title data-msgid=stars>Stars</title>
 <link rel=stylesheet href="entry-style.css">
 <base target=_blank>
 <body>
@@ -23,46 +23,48 @@
   </header>
   
   <menu id=tabs>
-    <li id=menu-stars class=tab-button><a href="#stars" target=_self>Stars</a>
-    <li id=menu-comments class=tab-button hidden><a href="#comments" target=_self>Comments
-    (<span id=menu-comment-count>0</span>)
-    <img src="http://s.hatena.ne.jp/images/private.gif" alt="Private"></a>
-    <li id=menu-notes class=tab-button><a href="#notes" target=_self>Notes
-    (<span id=menu-note-count>0</span>)</a>
+    <li id=menu-stars class=tab-button><a href="#stars" target=_self data-msgid=stars>Stars</a>
+    <li id=menu-comments class=tab-button hidden>
+      <a href="#comments" target=_self><span data-msgid=comments>Comments</span>
+      (<span id=menu-comment-count>0</span>)
+      <img src="http://s.hatena.ne.jp/images/private.gif" alt="Private" data-alt-msgid="private"></a>
+    <li id=menu-notes class=tab-button>
+      <a href="#notes" target=_self><span data-msgid=notes>Notes</span>
+      (<span id=menu-note-count>0</span>)</a>
   </menu>
 
   <section id=stars>
     <article>
       <h1>
         <span class=user-info></span>
-        <span class=section-info>Add stars</span>
+        <span class=section-info data-msgid=stars_add>Add stars</span>
       </h1>
       <div id=user-avail-star-count class=star-count>
-        <p><button type=button class=add-star-yellow disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
+        <p><button type=button class=add-star-yellow disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star" data-alt-msgid=star_add_yellow></button>
         <span class=star-yellow>0</span>
-        <p><button type=button class=add-star-green disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
+        <p><button type=button class=add-star-green disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star" data-alt-msgid=star_add_green></button>
         <span class=star-green>0</span>
-        <p><button type=button class=add-star-red disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
+        <p><button type=button class=add-star-red disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star" data-alt-msgid=star_add_red></button>
         <span class=star-red>0</span>
-        <p><button type=button class=add-star-blue disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
+        <p><button type=button class=add-star-blue disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star" data-alt-msgid=star_add_blue></button>
         <span class=star-blue>0</span>
-        <p><button type=button class=add-star-purple disabled hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
+        <p><button type=button class=add-star-purple disabled hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star" data-alt-msgid=star_add_purple></button>
         <span class=star-purple hidden>0</span>
       </div>
       <div class=login-links>
-        <p>You need to login to add stars.
+        <p data-msgid=login_add_stars>You need to login to add stars.
         <ul class=actions>
-          <li><a class=link-login>Login</a>
-          <li><a class=link-register>Create an account</a>
+          <li><a class=link-login data-msgid=login>Login</a>
+          <li><a class=link-register data-msgid=register>Create an account</a>
         </ul>
       </div>
       <footer class=more>
-        <a href="https://www.hatena.com/shop/star"><img src="http://s.hatena.ne.jp/images/buy_star_cart_purple.gif" alt> Color star shop</a>
+        <a href="https://www.hatena.com/shop/star"><img src="http://s.hatena.ne.jp/images/buy_star_cart_purple.gif" alt> <span data-msgid=shop_star>Color star shop</span></a>
       </footer>
     </article>
     
     <article>
-      <h1>Stars</h1>
+      <h1 data-msgid=stars>Stars</h1>
       
       <ul id=star-user-list>
         <li hidden class=template>
@@ -71,7 +73,7 @@
               <img class=star-image><span class=star-count></span>
             </span>
             <span class=user-info></span>
-            <button type=button class=delete-button><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete a star"></button>
+            <button type=button class=delete-button><img src="http://s.hatena.com/images/delete2.gif" alt=Delete data-alt-msgid=delete title="Delete a star" data-title-msgid=star_delete></button>
           </span>
           <span class=star-user-quote>
             <q class=star-quote></q>
@@ -85,7 +87,7 @@
       <article hidden class=template>
         <h1>
           <span class=user-info></span>
-          <button type=button class=delete-button data-confirm="Do you really want to delete this comment?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this comment"></button>
+          <button type=button class=delete-button data-confirm="Do you really want to delete this comment?" data-data-confirm-msgid=comment_delete_confirm><img src="http://s.hatena.com/images/delete2.gif" alt=Delete data-alt-msgid=delete title="Delete this comment" data-title-msgid=comment_delete></button>
         </h1>
         <p>
           <span class=comment-body></span>
@@ -93,13 +95,13 @@
       <article id=star-comment-form hidden>
         <h1>
           <span class=user-info></span>
-          <span class=section-info>Send a comment</span>
+          <span class=section-info data-msgid=comment_add_info>Send a comment</span>
         </h1>
         <form>
           <p>
             <textarea name=body class=comment-body></textarea>
           <footer>
-            <button type=submit name=submit class=submit-button>Send</button>
+            <button type=submit name=submit class=submit-button data-msgid=comment_add>Send</button>
             <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
           </footer>
         </form>
@@ -112,21 +114,21 @@
       <article id=haiku-note-form>
         <h1>
           <span class=user-info></span>
-          <span class=section-info>Add a note</span>
+          <span class=section-info data-msgid=note_add_info>Add a note</span>
         </h1>
         <form>
           <p>
             <textarea name=body class=entry-body disabled></textarea>
           <footer>
-            <button type=submit name=submit class=submit-button disabled>Send</button>
+            <button type=submit name=submit class=submit-button disabled data-msgid=note_add>Send</button>
             <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
           </footer>
         </form>
         <div class=login-links>
-          <p>You need to login to write notes.
+          <p data-msgid=login_add_notes>You need to login to write notes.
           <ul class=actions>
-            <li><a class=link-login>Login</a>
-            <li><a class=link-register>Create an account</a>
+            <li><a class=link-login data-msgid=login>Login</a>
+            <li><a class=link-register data-msgid=register>Create an account</a>
           </ul>
         </div>
       </article>
@@ -134,18 +136,19 @@
         <h1>
           <span class=user-info></span>
           <time class=timestamp></time>
-          <button type=button class=delete-button data-confirm="Do you really want to delete this entry?"><img src="http://s.hatena.com/images/delete2.gif" alt=Delete title="Delete this entry"></button>
+          <button type=button class=delete-button data-confirm="Do you really want to delete this entry?" data-data-confirm-msgid=note_delete_confirm><img src="http://s.hatena.com/images/delete2.gif" alt=Delete data-alt-msgid=delete title="Delete this entry" data-title-msgid=note_delete></button>
         </h1>
         <p>
           <span class=entry-body></span>
       </article>
       <footer class=more>
-        <a href=""><img src="https://www.hatena.ne.jp/images/favicon/haiku.gif" alt=Haiku> More...</a>
+        <a href=""><img src="https://www.hatena.ne.jp/images/favicon/haiku.gif" alt=Haiku> <span data-msgid=read_more>More...</span></a>
       </footer>
     </div>
   </section>
   
   <script src=entry-script.js charset=utf-8></script>
+  <script src=i18n.js charset=utf-8></script>
 <!--
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.

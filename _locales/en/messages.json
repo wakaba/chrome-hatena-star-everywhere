@@ -1,0 +1,181 @@
+{
+  "hatenastar_everywhere": {
+    "message": "Hatena Star Everywhere"
+  },
+  "hatenastar_everywhere_desc": {
+    "message": "Add Hatena Star button to your browser and Web pages in the world."
+  },
+  
+  "stars": {
+    "message": "Stars"
+  },
+  "stars_add": {
+    "message": "Add stars"
+  },
+  
+  "star_add_yellow": {
+    "message": "Add a yellow star"
+  },
+  "star_add_green": {
+    "message": "Add a green star"
+  },
+  "star_add_red": {
+    "message": "Add a red star"
+  },
+  "star_add_blue": {
+    "message": "Add a blue star"
+  },
+  "star_add_purple": {
+    "message": "Add a purple star"
+  },
+  "star_delete": {
+    "message": "Delete a star"
+  },
+  
+  "comments": {
+    "message": "Comments"
+  },
+  "comment_add": {
+    "message": "Send"
+  },
+  "comment_add_info": {
+    "message": "Send a comment"
+  },
+  "comment_delete": {
+    "message": "Delete this comment"
+  },
+  "comment_delete_confirm": {
+    "message": "Do you really want to delete this comment?"
+  },
+  
+  "notes": {
+    "message": "Notes"
+  },
+  "note_add": {
+    "message": "Add"
+  },
+  "note_add_info": {
+    "message": "Add a note"
+  },
+  "note_delete": {
+    "message": "Delete this note"
+  },
+  "note_delete_confirm": {
+    "message": "Do you really want to delete this note?"
+  },
+  
+  "private": {
+    "message": "Private"
+  },
+  "options": {
+    "message": "Options"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "read_more": {
+    "message": "See more..."
+  },
+  
+  "hatena_id": {
+    "message": "Hatena ID"
+  },
+  "login": {
+    "message": "Login"
+  },
+  "login_add_stars": {
+    "message": "You need to login to add stars."
+  },
+  "login_add_notes": {
+    "message": "You need to login to write notes."
+  },
+  "logout": {
+    "message": "Logout"
+  },
+  "logout_confirm": {
+    "message": "Do you really want to logout?"
+  },
+  "logout_now": {
+    "message": "You are not currently logged in."
+  },
+  "register": {
+    "message": "Create an account"
+  },
+  
+  "community": {
+    "message": "Community"
+  },
+  "community_choose": {
+    "message": "Choose your preferrable community:"
+  },
+  "community_jp": {
+    "message": "Japan (hatena.ne.jp)"
+  },
+  "community_com": {
+    "message": "Worldwide (hatena.com)"
+  },
+  
+  "users": {
+    "message": "Users"
+  },
+  "user_icons": {
+    "message": "User icons"
+  },
+  "user_icons_use_default": {
+    "message": "Use user's configuration"
+  },
+  "user_icons_use_happie": {
+    "message": "Use Happie"
+  },
+  "user_icons_use_profile_icon": {
+    "message": "Use profile icon"
+  },
+  "user_names": {
+    "message": "User names"
+  },
+  "user_names_use_nickname": {
+    "message": "Use nicknames"
+  },
+  "user_names_use_hatena_id": {
+    "message": "Use Hatena IDs"
+  },
+  
+  "shop_star": {
+    "message": "Color star shop"
+  },
+  
+  "privacy": {
+    "message": "Privacy"
+  },
+  
+  "url_patterns_desc": {
+    "message": "You can specify patterns for disallowed and allowed URLs.  URLs disallowed by these patterns, as well as URLs in a Secret Window, will not be sent to Hatena Star server automatically.  You can still show list of stars for these URLs by opening the star panel by clicking the Star icon.  Note that these regular expressions are evaluated in order."
+  },
+  "url_patterns_syntax": {
+    "message": "Newline-separated regular expressions"
+  },
+  
+  "url_patterns_revert": {
+    "message": "Use default"
+  },
+  "url_patterns_revert_confirm": {
+    "message": "Do you really want to revert all your changes?"
+  },
+  
+  "url_patterns_1": {
+    "message": "1. Allowed URLs"
+  },
+  "url_patterns_2": {
+    "message": "2. Disallowed URLs"
+  },
+  "url_patterns_3": {
+    "message": "3. Allowed URLs"
+  },
+  
+  "devel": {
+    "message": "For development"
+  },
+  "logs": {
+    "message": "Logs"
+  }
+}

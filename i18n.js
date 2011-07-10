@@ -1,20 +1,24 @@
-{
-  "name": "__MSG_hatenastar_everywhere__",
-  "version": "1.0",
-  "description": "__MSG_hatenastar_everywhere_desc__",
-  "background_page": "background.html",
-  "options_page": "options.html",
-  "browser_action": {
-    "default_icon": "star.gif",
-    "popup": "entry.html"
-  },
-  "default_locale": "en",
-  "permissions": [
-    "tabs",
-    "http://*/*",
-    "https://*/*"
-  ]
-}
+document.documentElement.setAttribute ('lang', chrome.i18n.getMessage ('@@ui_locale'));
+
+    var els = document.querySelectorAll ('[data-msgid], [data-alt-msgid], [data-title-msgid], [data-data-confirm-msgid]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      
+      var msgid = el.getAttribute ('data-msgid');
+      if (msgid) {
+        var msg = chrome.i18n.getMessage (msgid);
+        if (msg) el.textContent = msg;
+      }
+      
+      ['alt', 'title', 'data-confirm'].forEach (function (attr) {
+        var msgid = el.getAttribute ('data-' + attr + '-msgid');
+        if (msgid) {
+          var msg = chrome.i18n.getMessage (msgid);
+          if (msg) el.setAttribute (attr, msg);
+        }
+      });
+    }
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
  *

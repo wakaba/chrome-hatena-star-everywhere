@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang=en>
-<title>Options &mdash; Hatena Star Everywhere</title>
+<title data-msgid=options>Options</title>
 <style>
   body {
     margin: 0;
@@ -89,6 +89,12 @@
     margin-top: 0;
   }
   
+  .syntax-note {
+    font-size: 90%;
+  }
+  .syntax-note::before { content: "(" }
+  .syntax-note::after { content: ")" }
+  
   menu li, ul li {
     margin: 0;
     padding: 0.5em;
@@ -119,42 +125,45 @@
 </style>
 <body>
 
-<h1>Options &mdash; Hatena Star Everywhere</h1>
+<h1><span data-msgid=options>Options</span> &mdash;
+<span data-msgid=hatenastar_everywhere>Hatena Star Everywhere</span></h1>
 
 <section id=account>
   <hgroup>
-    <h2>Hatena ID</h2>
+    <h2 data-msgid=hatena_id>Hatena ID</h2>
   </hgroup>
 
   <section>
     <hgroup>
-      <h3>Hatena ID</h3>
+      <h3 data-msgid=hatena_id>Hatena ID</h3>
     </hgroup>
     <div hidden id=account-for-user>
       <p class=user-info>
       <menu class=actions>
         <li><a id=logout-link onclick="
           return confirm(this.getAttribute ('data-confirm'));
-        " data-confirm="Do you really want to logout?">Logout</a>
+        " data-confirm="Do you really want to logout?" data-data-confirm-msgid=logout_confirm data-msgid=logout>Logout</a>
       </menu>
     </div>
     <div id=account-for-guest>
-      <p>You are not currently logged in.
+      <p data-msgid=logout_now>You are not currently logged in.
       <menu class=actions>
-        <li><a id=login-link>Login</a>
-        <li><a id=register-link>Create an account</a>
+        <li><a id=login-link data-msgid=login>Login</a>
+        <li><a id=register-link data-msgid=register>Create an account</a>
       </menu>
     </div>
   </section>
   <section>
     <hgroup>
-      <h3>Community</h3>
+      <h3 data-msgid=community>Community</h3>
     </hgroup>
     <div>
-      <p>Choose your preferrable community:
+      <p data-msgid=community_choose>Choose your preferrable community:
       <ul class=choices>
-        <li><label><input type=radio name=tld value=jp id=community-jp> Japan (hatena.ne.jp)</label>
-        <li><label><input type=radio name=tld value=com id=community-com> Worldwide (hatena.com)</label>
+        <li><label><input type=radio name=tld value=jp id=community-jp> 
+        <span data-msgid=community_jp>Japan (hatena.ne.jp)</span></label>
+        <li><label><input type=radio name=tld value=com id=community-com> 
+        <span data-msgid=community_com>Worldwide (hatena.com)</span></label>
       </ul>
     </div>
   </section>
@@ -162,56 +171,61 @@
 
 <section id=users>
   <hgroup>
-    <h2>Users</h2>
+    <h2 data-msgid=users>Users</h2>
   </hgroup>
 
   <section>
     <hgroup>
-      <h3>User icons</h3>
+      <h3 data-msgid=user_icons>User icons</h3>
     </hgroup>
     <ul class=choices>
-      <li><label><input type=radio name=iconType value=default id=iconType-default> Use user's configuration</label>
-      <li><label><input type=radio name=iconType value=face id=iconType-face> Use Happie</label>
-      <li><label><input type=radio name=iconType value=icon id=iconType-icon> Use profile icon</label>
+      <li><label><input type=radio name=iconType value=default id=iconType-default> 
+      <span data-msgid=user_icons_use_default>Use user's configuration</span></label>
+      <li><label><input type=radio name=iconType value=face id=iconType-face> 
+      <span data-msgid=user_icons_use_happie>Use Happie</span></label>
+      <li><label><input type=radio name=iconType value=icon id=iconType-icon> 
+      <span data-msgid=user_icons_use_profile_icon>Use profile icon</span></label>
     </ul>
   </section>
   <section>
     <hgroup>
-      <h3>User names</h3>
+      <h3 data-msgid=user_names>User names</h3>
     </hgroup>
     <ul class=choices>
-      <li><label><input type=radio name=nameType value=nickname id=nameType-nickname> Use nickname</label>
-      <li><label><input type=radio name=nameType value=hatenaid id=nameType-hatenaid> Use Hatena ID</label>
+      <li><label><input type=radio name=nameType value=nickname id=nameType-nickname> 
+      <span data-msgid=user_names_use_nickname>Use nickname</span></label>
+      <li><label><input type=radio name=nameType value=hatenaid id=nameType-hatenaid> 
+      <span data-msgid=user_names_use_hatena_id>Use Hatena ID</span></label>
     </ul>
   </section>
 </section>
 
 <section id=privacy>
   <hgroup>
-    <h2>Privacy</h2>
+    <h2 data-msgid=privacy>Privacy</h2>
     
-    <p>You can specify patterns for disallowed and allowed URLs.  URLs disallowed by these patterns, as well as URLs in a Secret Window, will not be sent to Hatena Star server automatically.  You can still show list of stars for these URLs by opening the star panel by clicking the Star icon.  Note that these regular expressions are evaluated in order.
+    <p data-msgid=url_patterns_desc>
   </hgroup>
   
   <section>
     <hgroup>
-      <h3>1. Allowed URLs</h3>
+      <h3 data-msgid=url_patterns_1>1. Allowed URLs</h3>
     </hgroup>
-    <p><textarea disabled>^http://&#xa;^https://</textarea>
+    <p><textarea disabled></textarea>
   </section>
   
   <section>
     <hgroup>
-      <h3>2. Disallowed URLs</h3>
-      <p>(Newline-separated regular expressions)
+      <h3 data-msgid=url_patterns_2>2. Disallowed URLs</h3>
+      <p class=syntax-note data-msgid=url_patterns_syntax>Newline-separated regular expressions
     </hgroup>
     <p><textarea id=disallowedURLs></textarea>
   </section>
   
   <section>
     <hgroup>
-      <h3>3. Allowed URLs</h3>
-      <p>(Newline-separated regular expressions)
+      <h3 data-msgid=url_patterns_3>3. Allowed URLs</h3>
+      <p class=syntax-note data-msgid=url_patterns_syntax>Newline-separated regular expressions
     </hgroup>
     <p><textarea id=allowedURLs></textarea>
   </section>
@@ -222,16 +236,16 @@
       config.delete ('disallowedURLs');
       location.reload ();
     }
-  " data-confirm="Do you really want to revert all your changes?">Use default</button>
+  " data-confirm="Do you really want to revert all your changes?" data-data-confirm-msgid=url_patterns_revert_confirm data-msgid=url_patterns_revert>Use default</button>
 </section>
 
 <section id=devel>
   <hgroup>
-    <h2>For development</h2>
+    <h2 data-msgid=devel>For development</h2>
   </hgroup>
 
   <menu>
-    <li><a href="logs.html">Logs</a>
+    <li><a href="logs.html" data-msgid=logs>Logs</a>
   </menu>
 </section>
 
@@ -290,6 +304,7 @@
   });
   document.getElementById ('nameType-' + config.get ('nameType')).checked = true;
 </script>
+<script src=i18n.js charset=utf-8></script>
 
 <!--
 /* ***** BEGIN LICENSE BLOCK *****

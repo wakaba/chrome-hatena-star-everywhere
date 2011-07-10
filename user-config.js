@@ -4,7 +4,7 @@ var UserConfig = function () {
 
 UserConfig.prototype = {
   defaultValues: {
-    allowedURLs: '^https://[^/]+\.hatena\.(?:ne\.jp|com)/',
+    allowedURLs: '^https://[^/]+\\.hatena\\.(?:ne\\.jp|com)/',
     disallowedURLs: '^https://\n^http://[^/.]+/',
     tld: 'jp',
     iconType: 'default',

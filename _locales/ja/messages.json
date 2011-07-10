@@ -1,0 +1,181 @@
+﻿{
+  "hatenastar_everywhere": {
+    "message": "どこでもはてなスター"
+  },
+  "hatenastar_everywhere_desc": {
+    "message": "ブラウザーといろいろなところにはてなスターボタンを追加します。"
+  },
+  
+  "stars": {
+    "message": "スター"
+  },
+  "stars_add": {
+    "message": "スターを追加"
+  },
+  
+  "star_add_yellow": {
+    "message": "スターを追加"
+  },
+  "star_add_green": {
+    "message": "グリーンスターを追加"
+  },
+  "star_add_red": {
+    "message": "レッドスターを追加"
+  },
+  "star_add_blue": {
+    "message": "ブルースターを追加"
+  },
+  "star_add_purple": {
+    "message": "パープルスターを追加"
+  },
+  "star_delete": {
+    "message": "スターを削除"
+  },
+  
+  "comments": {
+    "message": "コメント"
+  },
+  "comment_add": {
+    "message": "送信"
+  },
+  "comment_add_info": {
+    "message": "コメントを送信"
+  },
+  "comment_delete": {
+    "message": "このコメントを削除"
+  },
+  "comment_delete_confirm": {
+    "message": "本当にコメントを削除しますか。"
+  },
+  
+  "notes": {
+    "message": "メモ"
+  },
+  "note_add": {
+    "message": "追加"
+  },
+  "note_add_info": {
+    "message": "メモを追加"
+  },
+  "note_delete": {
+    "message": "このメモを削除"
+  },
+  "note_delete_confirm": {
+    "message": "本当にこのコメントを削除しますか。"
+  },
+  
+  "private": {
+    "message": "プライベート"
+  },
+  "options": {
+    "message": "オプション"
+  },
+  "delete": {
+    "message": "削除"
+  },
+  "read_more": {
+    "message": "もっと見る"
+  },
+  
+  "hatena_id": {
+    "message": "はてな ID"
+  },
+  "login": {
+    "message": "ログイン"
+  },
+  "login_add_stars": {
+    "message": "スターの追加にはログインが必要です。"
+  },
+  "login_add_notes": {
+    "message": "メモを書くにはログインが必要です。"
+  },
+  "logout": {
+    "message": "ログアウト"
+  },
+  "logout_confirm": {
+    "message": "本当にログアウトしますか。"
+  },
+  "logout_now": {
+    "message": "ログインしていません。"
+  },
+  "register": {
+    "message": "アカウントを作成"
+  },
+  
+  "community": {
+    "message": "コミュニティー"
+  },
+  "community_choose": {
+    "message": "どちらのコミュニティーを使うか選んでください。"
+  },
+  "community_jp": {
+    "message": "日本 (hatena.ne.jp)"
+  },
+  "community_com": {
+    "message": "全世界 (hatena.com)"
+  },
+  
+  "users": {
+    "message": "ユーザー"
+  },
+  "user_icons": {
+    "message": "ユーザーアイコン"
+  },
+  "user_icons_use_default": {
+    "message": "ユーザー設定に依る"
+  },
+  "user_icons_use_happie": {
+    "message": "ハッピィを使う"
+  },
+  "user_icons_use_profile_icon": {
+    "message": "プロフィールアイコンを使う"
+  },
+  "user_names": {
+    "message": "ユーザー名"
+  },
+  "user_names_use_nickname": {
+    "message": "ニックネームを使う"
+  },
+  "user_names_use_hatena_id": {
+    "message": "はてな ID を使う"
+  },
+  
+  "shop_star": {
+    "message": "カラースターショップ"
+  },
+  
+  "privacy": {
+    "message": "プライバシー"
+  },
+  
+  "url_patterns_desc": {
+    "message": "自動的なアクセスを認める URL と認めない URL を指定することができます。このパターンに合致する URL やシークレットウィンドウ内の URL は、はてなスターのサーバーに自動的に送信されることはありません。その場合であっても、スターアイコンを選んでパネルを開くとスターを見ることができます。なお、この正規表現は順番に評価されます。"
+  },
+  "url_patterns_syntax": {
+    "message": "正規表現 (改行区切り)"
+  },
+  
+  "url_patterns_revert": {
+    "message": "既定値に戻す"
+  },
+  "url_patterns_revert_confirm": {
+    "message": "変更をすべて元に戻しますか。"
+  },
+  
+  "url_patterns_1": {
+    "message": "1. 認める URL"
+  },
+  "url_patterns_2": {
+    "message": "2. 認めない URL"
+  },
+  "url_patterns_3": {
+    "message": "3. 認める URL"
+  },
+  
+  "devel": {
+    "message": "開発用"
+  },
+  "logs": {
+    "message": "ログ"
+  }
+}
