@@ -198,7 +198,7 @@ section:not(:target) {
 }
 
 .star-quote {
-  color: #CCCCCC;
+  color: #AAAAAA;
   font-size: 80%;
 }
 .star-quote:empty {

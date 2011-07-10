@@ -84,6 +84,11 @@
     margin: 0.5em 0.5em;
     padding: 0;
   }
+  
+  hgroup ~ ul {
+    margin-top: 0;
+  }
+  
   menu li, ul li {
     margin: 0;
     padding: 0.5em;
@@ -152,6 +157,32 @@
         <li><label><input type=radio name=tld value=com id=community-com> Worldwide (hatena.com)</label>
       </ul>
     </div>
+  </section>
+</section>
+
+<section id=users>
+  <hgroup>
+    <h2>Users</h2>
+  </hgroup>
+
+  <section>
+    <hgroup>
+      <h3>User icons</h3>
+    </hgroup>
+    <ul class=choices>
+      <li><label><input type=radio name=iconType value=default id=iconType-default> Use user's configuration</label>
+      <li><label><input type=radio name=iconType value=face id=iconType-face> Use Happie</label>
+      <li><label><input type=radio name=iconType value=icon id=iconType-icon> Use profile icon</label>
+    </ul>
+  </section>
+  <section>
+    <hgroup>
+      <h3>User names</h3>
+    </hgroup>
+    <ul class=choices>
+      <li><label><input type=radio name=nameType value=nickname id=nameType-nickname> Use nickname</label>
+      <li><label><input type=radio name=nameType value=hatenaid id=nameType-hatenaid> Use Hatena ID</label>
+    </ul>
   </section>
 </section>
 
@@ -236,17 +267,28 @@
       }
     }, {fromServer: true});
   } // updateAccountInfo
-  
-  document.getElementById ('community-jp').onchange = function () {
-    config.set ('tld', 'jp');
-    updateAccountInfo ();
-  }; // onchange
-  document.getElementById ('community-com').onchange = function () {
-    config.set ('tld', 'com');
-    updateAccountInfo ();
-  }; // onchange
-  
   updateAccountInfo ();
+  
+  ['jp', 'com'].forEach (function (value) {
+    document.getElementById ('community-' + value).onchange = function () {
+      config.set ('tld', value);
+      updateAccountInfo ();
+    }; // onchange
+  });
+  
+  ['default', 'face', 'icon'].forEach (function (value) {
+    document.getElementById ('iconType-' + value).onchange = function () {
+      config.set ('iconType', value);
+    }; // onchange
+  });
+  document.getElementById ('iconType-' + config.get ('iconType')).checked = true;
+  
+  ['nickname', 'hatenaid'].forEach (function (value) {
+    document.getElementById ('nameType-' + value).onchange = function () {
+      config.set ('nameType', value);
+    }; // onchange
+  });
+  document.getElementById ('nameType-' + config.get ('nameType')).checked = true;
 </script>
 
 <!--

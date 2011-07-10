@@ -7,6 +7,8 @@ UserConfig.prototype = {
     allowedURLs: '^https://[^/]+\.hatena\.(?:ne\.jp|com)/',
     disallowedURLs: '^https://\n^http://[^/.]+/',
     tld: 'jp',
+    iconType: 'default',
+    nameType: 'nickname',
   }, // defaultValues
   
   get: function (key) {

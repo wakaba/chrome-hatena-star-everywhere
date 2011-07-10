@@ -1,6 +1,9 @@
-    var bg = chrome.extension.getBackgroundPage ();
-    var logger = bg.logger;
-    
+var bg = chrome.extension.getBackgroundPage ();
+var logger = bg.logger;
+
+var PageInfo = bg.PageInfo;
+var UserInfo = bg.UserInfo;
+
     var param = {};
     var query = (location.search || '').replace (/^\?/, '').split (/[&;]/).forEach (function (v) {
       var w = v.split (/=/, 2).map (function (v) { return decodeURIComponent (v) });

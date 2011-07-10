@@ -146,7 +146,7 @@ PageInfo.prototype = {
           var div = document.createElement ('div');
           div.innerHTML = xhr.responseText;
           var form = div.getElementsByTagName ('form')[0];
-          if (form.elements && form.elements.token && form.elements.token.value) {
+          if (form && form.elements && form.elements.token && form.elements.token.value) {
             self.userAddStarToken = form.elements.token.value;
           }
           var counts = {};
@@ -167,19 +167,27 @@ var UserInfo = function () {
   this.init.apply (this, arguments);
 }; // UserInfo
 
+UserInfo.displayNameCache = {};
+
 UserInfo.prototype = {
   init: function (args) {
     if (args.starJSON) {
       this.urlName = args.starJSON.name;
-      this.displayName = args.starJSON.name;
+      this.displayName = UserInfo.displayNameCache[this.urlName] || args.starJSON.name;
     } else if (args.haikuJSON) {
       this.urlName = args.haikuJSON.screen_name;
       this.displayName = args.haikuJSON.name;
       this.hasNickname = true;
+      if (this.urlName) {
+        UserInfo.displayNameCache[this.urlName] = this.displayName;
+      }
     } else if (args.nanoJSON) {
       this.urlName = args.nanoJSON.url_name;
       this.displayName = args.nanoJSON.display_name;
       this.hasNickname = true;
+      if (this.urlName) {
+        UserInfo.displayNameCache[this.urlName] = this.displayName;
+      }
     }
     this.config = args.config;
   }, // init
@@ -195,9 +203,9 @@ UserInfo.prototype = {
   }, // getURL
   getIconURL: function () {
     if (this.urlName) {
-      return 'http://n.hatena.com/' + this.urlName + '/profile/image?size=16';
+      return 'http://n.hatena.com/' + this.urlName + '/profile/image?size=16&type=' + this.config.get ('iconType');
     } else {
-      return 'http://n.hatena.com/sample/profile/image?size=16&guest=1';
+      return 'http://n.hatena.com/sample/profile/image?size=16&guest=1&type=' + this.config.get ('iconType');
     }
   }, // getIconURL
   
@@ -210,7 +218,11 @@ UserInfo.prototype = {
     el.getElementsByClassName ('profile-image')[0].src = this.getIconURL ();
     var nicknameEl = el.getElementsByClassName ('nickname-link')[0];
     nicknameEl.href = url;
-    nicknameEl.textContent = this.displayName;
+    if (this.config.get ('nameType') == 'hatenaid') {
+      nicknameEl.textContent = this.urlName || this.displayName;
+    } else {
+      nicknameEl.textContent = this.displayName;
+    }
     nicknameEl.title = 'id:' + this.urlName
   }, // fillHTML
 }; // UserInfo.prototype
