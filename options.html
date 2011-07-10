@@ -66,6 +66,9 @@
   section > section p {
     -webkit-box-flex: 1;
   }
+  section > section div {
+    margin-bottom: 0.5em;
+  }
   h3 {
     display: block;
     margin: 0;
@@ -77,18 +80,80 @@
     height: 5em;
   }
   
-  menu {
+  menu, ul {
     margin: 0.5em 0.5em;
     padding: 0;
   }
-  menu li {
+  menu li, ul li {
     margin: 0;
     padding: 0.5em;
+  }
+  
+  .actions li {
+    display: block;
+    padding: 0;
+    line-height: 1.4;
+  }
+  
+  .actions li::before {
+    content: "\261E" " ";
+  }
+  
+  .choices li {
+    display: block;
+    padding: 0;
+    line-height: 1.5;
+  }
+  
+  .profile-image-link {
+    margin-right: 0.3em;
+  }
+  .nickname-link {
+
   }
 </style>
 <body>
 
 <h1>Options &mdash; Hatena Star Everywhere</h1>
+
+<section id=account>
+  <hgroup>
+    <h2>Hatena ID</h2>
+  </hgroup>
+
+  <section>
+    <hgroup>
+      <h3>Hatena ID</h3>
+    </hgroup>
+    <div hidden id=account-for-user>
+      <p class=user-info>
+      <menu class=actions>
+        <li><a id=logout-link onclick="
+          return confirm(this.getAttribute ('data-confirm'));
+        " data-confirm="Do you really want to logout?">Logout</a>
+      </menu>
+    </div>
+    <div id=account-for-guest>
+      <p>You are not currently logged in.
+      <menu class=actions>
+        <li><a id=login-link>Login</a>
+        <li><a id=register-link>Create an account</a>
+      </menu>
+    </div>
+  </section>
+  <section>
+    <hgroup>
+      <h3>Community</h3>
+    </hgroup>
+    <div>
+      <p>Choose your preferrable community:
+      <ul class=choices>
+        <li><label><input type=radio name=tld value=jp id=community-jp> Japan (hatena.ne.jp)</label>
+        <li><label><input type=radio name=tld value=com id=community-com> Worldwide (hatena.com)</label>
+      </ul>
+    </div>
+  </section>
+</section>
 
 <section id=privacy>
   <hgroup>
@@ -140,7 +205,8 @@
 </section>
 
 <script>
-  var config = chrome.extension.getBackgroundPage ().config;
+  var bg = chrome.extension.getBackgroundPage ();
+  var config = bg.config;
 
   var ids = ['disallowedURLs', 'allowedURLs'];
   ids.forEach (function (id) {
@@ -150,6 +216,37 @@
       config.set (id, el.value);
     }; // onchange
   });
+  
+  var accountForUser = document.getElementById ('account-for-user');
+  var accountForGuest = document.getElementById ('account-for-guest');
+  function updateAccountInfo () {
+    var tld = config.get ('tld');
+    document.getElementById ('community-' + tld).checked = true;
+    bg.getCurrentUser (function (user) {
+      if (user.urlName) {
+        accountForUser.hidden = false;
+        accountForGuest.hidden = true;
+        user.fillHTML (accountForUser.getElementsByClassName ('user-info')[0]);
+        document.getElementById ('logout-link').href = 'http://' + config.getDomain ('www') + '/logout?location=http://' + config.getDomain ('s') + '/';
+      } else {
+        accountForUser.hidden = true;
+        accountForGuest.hidden = false;
+        document.getElementById ('login-link').href = 'http://' + config.getDomain ('www') + '/login?location=http://' + config.getDomain ('s') + '/';
+        document.getElementById ('register-link').href = 'http://' + config.getDomain ('www') + '/register?location=http://' + config.getDomain ('s') + '/';
+      }
+    }, {fromServer: true});
+  } // updateAccountInfo
+  
+  document.getElementById ('community-jp').onchange = function () {
+    config.set ('tld', 'jp');
+    updateAccountInfo ();
+  }; // onchange
+  document.getElementById ('community-com').onchange = function () {
+    config.set ('tld', 'com');
+    updateAccountInfo ();
+  }; // onchange
+  
+  updateAccountInfo ();
 </script>
 
 <!--

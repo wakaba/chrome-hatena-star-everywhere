@@ -39,16 +39,23 @@
         <span class=section-info>Add stars</span>
       </h1>
       <div id=user-avail-star-count class=star-count>
-        <p><button type=button class=add-star-yellow><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
-        <span class=star-yellow>&#x221E;</span>
-        <p><button type=button class=add-star-green><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
-        <span class=star-green hidden></span>
-        <p><button type=button class=add-star-red><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
-        <span class=star-red hidden></span>
-        <p><button type=button class=add-star-blue><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
-        <span class=star-blue hidden></span>
-        <p><button type=button class=add-star-purple hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
-        <span class=star-purple hidden></span>
+        <p><button type=button class=add-star-yellow disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_yellow.gif" alt="Add a yellow star"></button>
+        <span class=star-yellow>0</span>
+        <p><button type=button class=add-star-green disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_green.gif" alt="Add a green star"></button>
+        <span class=star-green>0</span>
+        <p><button type=button class=add-star-red disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_red.gif" alt="Add a red star"></button>
+        <span class=star-red>0</span>
+        <p><button type=button class=add-star-blue disabled><img src="http://s.hatena.com/images/add_star_for_smartphone_blue.gif" alt="Add a blue star"></button>
+        <span class=star-blue>0</span>
+        <p><button type=button class=add-star-purple disabled hidden><img src="http://s.hatena.com/images/add_star_for_smartphone_purple.gif" alt="Add a purple star"></button>
+        <span class=star-purple hidden>0</span>
+      </div>
+      <div class=login-links>
+        <p>You need to login to add stars.
+        <ul class=actions>
+          <li><a class=link-login>Login</a>
+          <li><a class=link-register>Create an account</a>
+        </ul>
       </div>
       <footer class=more>
         <a href="https://www.hatena.com/shop/star"><img src="http://s.hatena.ne.jp/images/buy_star_cart_purple.gif" alt> Color star shop</a>
@@ -103,19 +110,26 @@
   
   <section id=notes>
     <div id=haiku-note-list>
-      <article id=haiku-note-form hidden>
+      <article id=haiku-note-form>
         <h1>
           <span class=user-info></span>
           <span class=section-info>Add a note</span>
         </h1>
         <form>
           <p>
-            <textarea name=body class=entry-body></textarea>
+            <textarea name=body class=entry-body disabled></textarea>
           <footer>
-            <button type=submit name=submit class=submit-button>Send</button>
+            <button type=submit name=submit class=submit-button disabled>Send</button>
             <img src="http://s.hatena.com/images/load.gif" class=indicator alt="..." hidden>
           </footer>
         </form>
+        <div class=login-links>
+          <p>You need to login to write notes.
+          <ul class=actions>
+            <li><a class=link-login>Login</a>
+            <li><a class=link-register>Create an account</a>
+          </ul>
+        </div>
       </article>
       <article hidden class=template>
         <h1>

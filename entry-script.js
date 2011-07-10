@@ -30,18 +30,33 @@
       });
     }
     
-    getMyInfo (function (json) {
-      var urlName = json.url_name;
+    getMyInfo (function (user) {
+      var urlName = user.urlName;
       if (urlName) {
         var css = 'article[data-owner-url-name="' + urlName + '"] .delete-button, li[data-owner-url-name="' + urlName + '"] .delete-button { display: block !important }';
         var style = document.createElement ('style');
         style.textContent = css;
         document.body.appendChild (style);
+        
+        var links = document.getElementsByClassName ('login-links');
+        for (var i = 0; i < links.length; i++) {
+          links[i].hidden = true;
+        }
+      } else {
+        var loginURL = 'https://' + bg.config.getDomain ('www') + '/login?location=http://' + bg.config.getDomain ('s') + '/';
+        var registerURL = 'https://' + bg.config.getDomain ('www') + '/register?location=http://' + bg.config.getDomain ('s') + '/';
+        var links = document.getElementsByClassName ('link-login');
+        for (var i = 0; i < links.length; i++) {
+          links[i].href = loginURL;
+        }
+        links = document.getElementsByClassName ('link-register');
+        for (var i = 0; i < links.length; i++) {
+          links[i].href = registerURL;
+        }
       }
       
-      var user = new UserInfo ({nanoJSON: json});
       user.fillHTML (document.getElementById ('stars').getElementsByTagName ('h1')[0].getElementsByClassName ('user-info')[0]);
-    });
+    }, {fromServer: true});
     
     var tabs = document.getElementById ('tabs');
     var tabButtons = tabs.getElementsByClassName ('tab-button');
@@ -63,6 +78,7 @@
       
       var pi = new PageInfo (url);
       self.pageInfo = pi;
+      pi.config = bg.config;
       pi.title = title;
       
       starEntryInfo.getElementsByClassName ('entry-title')[0].textContent = pi.title;
@@ -128,7 +144,7 @@
       stars.forEach (function (star) {
         var color = starColor || star.color;
         
-        if (opts && opts.incrementStarCounts && self.pageInfo.starCounts) {
+        if (opts && opts.incrementStarCounts && self.pageInfo && self.pageInfo.starCounts) {
           self.pageInfo.starCounts[color]++;
           self.pageInfo.starCounts.total++;
         }
@@ -142,7 +158,7 @@
         
         var li = starUserTemplate.cloneNode (true);
         li.hidden = false;
-        var user = new UserInfo ({starJSON: star});
+        var user = new UserInfo ({starJSON: star, config: bg.config});
         user.fillHTML (li.getElementsByClassName ('user-info')[0]);
         li.getElementsByClassName ('star-image')[0].src = 'http://s.hatena.com/images/star-' + color + '.gif';
         var starCount = li.getElementsByClassName ('star-count')[0];
@@ -171,8 +187,7 @@
         starCommentForm.hidden = false;
         document.getElementById ('menu-comments').hidden = false;
         document.getElementById ('menu-comment-count').textContent = comments.length;
-        getMyInfo (function (json) {
-          var user = new UserInfo ({nanoJSON: json});
+        getMyInfo (function (user) {
           user.fillHTML (starCommentForm.getElementsByClassName ('user-info')[0]);
         });
         starCommentForm.getElementsByTagName ('form')[0].onsubmit = function () {
@@ -200,7 +215,7 @@
       var self = this;
       bg.getRKS (function (rks) {
         var xhr = new XMLHttpRequest ();
-        var postURL = 'http://s.hatena.com/comment.add.json?uri=' + encodeURIComponent (args.url) + '&title=' + encodeURIComponent (args.title) + '&body=' + encodeURIComponent (args.body) + '&rks=' + encodeURIComponent (rks);
+        var postURL = 'http://' + bg.config.getDomain ('s') + '/comment.add.json?uri=' + encodeURIComponent (args.url) + '&title=' + encodeURIComponent (args.title) + '&body=' + encodeURIComponent (args.body) + '&rks=' + encodeURIComponent (rks);
         xhr.open ('GET', postURL, true);
         xhr.onreadystatechange = function () {
           if (xhr.readyState == 4) {
@@ -218,7 +233,7 @@
       var li = starCommentTemplate.cloneNode (true);
       li.hidden = false;
       li.className = '';
-      var user = new UserInfo ({starJSON: comment});
+      var user = new UserInfo ({starJSON: comment, config: bg.config});
       user.fillHTML (li.getElementsByClassName ('user-info')[0]);
       li.getElementsByClassName ('comment-body')[0].textContent = comment.body.replace (/<br \/>/g, '\n').replace (/&lt;/g, '<');
       li.getElementsByClassName ('delete-button')[0].onclick = function () {
@@ -238,16 +253,22 @@
             addStarLater (color);
           };
 
-          if (color == 'yellow') return;
-          
           var el = userAvailStarCountEl.getElementsByClassName ('star-' + color)[0];
-          if (counts[color]) {
+          
+          if (color == 'yellow') {
+            el.textContent = "\u221E";
+            el.hidden = false;
+            button.hidden = false;
+            button.disabled = false;
+          } else if (counts[color]) {
             el.textContent = counts[color];
             el.hidden = false;
             button.hidden = false;
+            button.disabled = false;
           } else if (color == 'purple') {
             el.hidden = true;
             button.hidden = true;
+            button.disabled = true;
           } else {
             el.textContent = 0;
             el.hidden = false;
@@ -278,7 +299,7 @@
         if (!stars) return;
         showStars (null, stars, {incrementStarCounts: true});
         updateAvailUserStarCounts ();
-        updateTotalStarCount ();
+        updateTotalStarCounts ();
       });
       self.nextAddStarCounts = {};
     } // addStar
@@ -286,7 +307,7 @@
     function deleteStar (color, quote, li) {
       bg.getRKS (function (rks) {
         var xhr = new XMLHttpRequest ();
-        var deleteURL = 'http://s.hatena.com/star.delete.json?uri=' + encodeURIComponent (self.pageInfo.url) + '&quote=' + encodeURIComponent (quote) + '&color=' + encodeURIComponent (color) + '&rks=' + encodeURIComponent (rks);
+        var deleteURL = 'http://' + bg.config.getDomain ('s') + '/star.delete.json?uri=' + encodeURIComponent (self.pageInfo.url) + '&quote=' + encodeURIComponent (quote) + '&color=' + encodeURIComponent (color) + '&rks=' + encodeURIComponent (rks);
         xhr.open ('GET', deleteURL, true);
         var sc = li.getElementsByClassName ('star-count')[0];
         xhr.onreadystatechange = function () {
@@ -317,7 +338,7 @@
     function deleteStarComment (id, li) {
       bg.getRKS (function (rks) {
         var xhr = new XMLHttpRequest ();
-        var deleteURL = 'http://s.hatena.com/comment.delete.json?comment_id=' + encodeURIComponent (id) + '&rks=' + encodeURIComponent (rks);
+        var deleteURL = 'http://' + bg.config.getDomain ('s') + '/comment.delete.json?comment_id=' + encodeURIComponent (id) + '&rks=' + encodeURIComponent (rks);
         xhr.open ('GET', deleteURL, true);
         xhr.onreadystatechange = function () {
           if (xhr.readyState == 4) {
@@ -336,41 +357,23 @@
       });
     }
     
-    function getMyInfo (nextCode) {
-      var self = this;
-      if (self.myInfo) {
-        setTimeout (function () {
-          nextCode.apply (self, [self.myInfo]);
-        }, 1);
-        return;
-      }
-      
-      var xhr = new XMLHttpRequest ();
-      xhr.open ('GET', 'http://n.hatena.com/applications/my.json', true);
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-          if (xhr.status < 400) {
-            var json = JSON.parse (xhr.responseText);
-            if (json) {
-              self.myInfo = json;
-              nextCode.apply (self, [json]);
-            }
-          }
-        }
-      };
-      xhr.send (null);
+    function getMyInfo (nextCode, opts) {
+      bg.getCurrentUser (nextCode, opts);
     } // getMyInfo
 
 function showHaikuEntries (entries) {
   entries.forEach (insertHaikuEntry);
 
   document.getElementById ('menu-note-count').textContent = entries.length;
-  haikuNoteMore.getElementsByTagName ('a')[0].href = 'http://h.hatena.ne.jp/target?word=' + encodeURIComponent (self.pageInfo.url);
+  haikuNoteMore.getElementsByTagName ('a')[0].href = 'http://' + bg.config.getDomain ('h') + '/target?word=' + encodeURIComponent (self.pageInfo.url);
   
-  getMyInfo (function (json) {
-    var user = new UserInfo ({nanoJSON: json});
+  getMyInfo (function (user) {
     user.fillHTML (haikuNoteForm.getElementsByClassName ('user-info')[0]);
-    haikuNoteForm.hidden = false;
+    if (user.urlName) {
+      var form = haikuNoteForm.getElementsByTagName ('form')[0];
+      form.elements.body.disabled = false;
+      form.elements.submit.disabled = false;
+    }
   });
   haikuNoteForm.getElementsByTagName ('form')[0].onsubmit = function () {
     var form = this;
@@ -395,7 +398,7 @@ function insertHaikuEntry (entry) {
   var li = haikuNoteTemplate.cloneNode (true);
   li.hidden = false;
   li.className = '';
-  var user = new UserInfo ({haikuJSON: entry.user});
+  var user = new UserInfo ({haikuJSON: entry.user, config: bg.config});
   user.fillHTML (li.getElementsByClassName ('user-info')[0]);
   var body = li.getElementsByClassName ('entry-body')[0];
   body.textContent = entry.text.substring (entry.keyword.length + 1);
@@ -415,7 +418,7 @@ function postHaikuEntry (args, nextCode) {
   var self = this;
   bg.getRKM (function (rkm) {
     var xhr = new XMLHttpRequest ();
-    var postURL = 'http://h.hatena.ne.jp/api/statuses/update.json';
+    var postURL = 'http://' + bg.config.getDomain ('h') + '/api/statuses/update.json';
     xhr.open ('POST', postURL, true);
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
@@ -438,7 +441,7 @@ function deleteHaikuEntry (name, id, nextCode) {
   var self = this;
   bg.getRKM (function (rkm) {
     var xhr = new XMLHttpRequest ();
-    var postURL = 'http://h.hatena.ne.jp/api/statuses/destroy/' + id + '.json';
+    var postURL = 'http://' + bg.config.getDomain ('h') + '/api/statuses/destroy/' + id + '.json';
     xhr.open ('POST', postURL, true);
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {

@@ -6,6 +6,7 @@ UserConfig.prototype = {
   defaultValues: {
     allowedURLs: '^https://[^/]+\.hatena\.(?:ne\.jp|com)/',
     disallowedURLs: '^https://\n^http://[^/.]+/',
+    tld: 'jp',
   }, // defaultValues
   
   get: function (key) {
@@ -17,6 +18,14 @@ UserConfig.prototype = {
   delete: function (key) {
     delete localStorage[key];
   }, // delete
+  
+  getDomain: function (subdomain) {
+    if (this.get ('tld') == 'jp') {
+      return subdomain + '.hatena.ne.jp';
+    } else {
+      return subdomain + '.hatena.com';
+    }
+  }, // getDomain
 }; // UserConfig
 
 /* ***** BEGIN LICENSE BLOCK *****

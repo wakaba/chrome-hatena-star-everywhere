@@ -5,6 +5,20 @@ starScript.src = chrome.extension.getURL ('load-hatena-star-content.js?' + Math.
 starScript.charset = 'utf-8';
 document.body.appendChild (starScript);
 
+if (/(?:^|\.)s[^.]*\.hatena\.(?:ne\.jp|com)/.test (location.hostname)) {
+  var topBox = document.getElementById ('top-box');
+  if (topBox) {
+    var more = topBox.getElementsByClassName ('more')[0];
+    if (more) {
+      var a = document.createElement ('a');
+      a.className = 'icon-arrow2-blue';
+      a.href = chrome.extension.getURL ('options.html');
+      a.textContent = 'Options of Hatena Star Everywhere';
+      more.appendChild (a);
+    }
+  }
+}
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
  *

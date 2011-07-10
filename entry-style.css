@@ -155,7 +155,7 @@ section {
   border-radius: 3px;
   border-style: outset none none none;
   min-height: 20em;
-  max-height: 30em;
+  max-height: 25em;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -280,7 +280,7 @@ form button {
   border: 1px outset #F3F3F3;
 }
 
-form button:active {
+form button:enabled:active {
   border-style: inset;
 }
 
@@ -302,6 +302,37 @@ form button:active {
   vertical-align: baseline;
 }
 
+/* ========== Login links ========== */
+
+.login-links:not([hidden]),
+#notes .login-links:not([hidden]) {
+  display: block;
+  margin: 0.5em auto;
+  padding: 0.6em 0.7em;
+  width: 80%;
+  background-color: #F3F3F3;
+  border: 1px solid #BBBBBB;
+  border-radius: 3px;
+  -webkit-box-shadow: 1px 1px #444444;
+  text-align: left;
+}
+
+.actions {
+  display: block;
+  margin: 0.3em;
+  padding: 0;
+}
+
+.actions li {
+  display: block;
+  margin: 0;
+  padding: 0.5em 0 0.3em 1.5em;
+  line-height: 1;
+}
+
+.actions li::before {
+  content: "\261E" " ";
+}
 
 
   #total-star-count {

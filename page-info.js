@@ -57,7 +57,7 @@ PageInfo.prototype = {
   
   getStarEntry: function (nextCode) {
     var self = this;
-    var entryURL = 'http://s.hatena.com/entry.json?uri=' + encodeURIComponent (this.url);
+    var entryURL = 'http://' + self.config.getDomain ('s') + '/entry.json?uri=' + encodeURIComponent (this.url);
     var xhr = new XMLHttpRequest ();
     xhr.open ('GET', entryURL, true);
     xhr.onreadystatechange = function () {
@@ -74,7 +74,7 @@ PageInfo.prototype = {
   
   getHaikuEntriesByWord: function (word, nextCode) {
     var self = this;
-    var entriesURL = 'http://h.hatena.ne.jp/api/statuses/keyword_timeline.json?word=' + encodeURIComponent (word);
+    var entriesURL = 'http://' + self.config.getDomain ('h') + '/api/statuses/keyword_timeline.json?word=' + encodeURIComponent (word);
     var xhr = new XMLHttpRequest ();
     xhr.open ('GET', entriesURL, true);
     xhr.onreadystatechange = function () {
@@ -137,7 +137,7 @@ PageInfo.prototype = {
   
   getAvailUserStarCounts: function (nextCode) {
     var self = this;
-    var paletteURL = 'http://s.hatena.com/colorpalette.smartphone?uri=' + encodeURIComponent (this.url);
+    var paletteURL = 'http://' + self.config.getDomain ('s') + '/colorpalette.smartphone?uri=' + encodeURIComponent (this.url);
     var xhr = new XMLHttpRequest ();
     xhr.open ('GET', paletteURL, true);
     xhr.onreadystatechange = function () {
@@ -146,7 +146,7 @@ PageInfo.prototype = {
           var div = document.createElement ('div');
           div.innerHTML = xhr.responseText;
           var form = div.getElementsByTagName ('form')[0];
-          if (form.elements.token && form.elements.token.value) {
+          if (form.elements && form.elements.token && form.elements.token.value) {
             self.userAddStarToken = form.elements.token.value;
           }
           var counts = {};
@@ -181,11 +181,14 @@ UserInfo.prototype = {
       this.displayName = args.nanoJSON.display_name;
       this.hasNickname = true;
     }
+    this.config = args.config;
   }, // init
+  
+  config: null,
   
   getURL: function () {
     if (this.urlName) {
-      return 'http://www.hatena.com/' + this.urlName + '/';
+      return 'http://' + this.config.getDomain ('www') + '/' + this.urlName + '/';
     } else {
       return null;
     }

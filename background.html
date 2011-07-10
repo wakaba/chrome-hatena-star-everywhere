@@ -1,4 +1,9 @@
 <!DOCTYPE HTML>
+<html
+    data-user-template="
+      <a class=profile-image-link><img alt class=profile-image></a><!--
+      --><a class=nickname-link></a>
+    ">
 <title>Background page &mdash; Hatena Star Everywhere</title>
 <body>
 
@@ -13,6 +18,7 @@
     if (changeInfo.status != 'complete') return;
     
     var pi = new PageInfo (tab.url);
+    pi.config = self.config;
     if (pi.isAllowedURL ()) {
       logger.add ('Loading <' + pi.url + '>...');
     } else {
@@ -21,7 +27,6 @@
     }
     
     pi.title = tab.title;
-    pi.config = self.config;
     pi.parsePageMetadata (tabId, function () {
       if (this.url != tab.url) {
         logger.add ('Canonical URL of page <' + tab.url + '> is <' + this.url + '>');
@@ -77,7 +82,7 @@
     var self = this;
     logger.add ('Adding stars to <' + url + '>...', {data: starCounts});
     var xhr = new XMLHttpRequest ();
-    var paletteURL = 'http://s.hatena.com/colorpalette.multiple';
+    var paletteURL = 'http://' + config.getDomain ('s') + '/colorpalette.multiple';
     xhr.open ('POST', paletteURL, true);
     xhr.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function () {
@@ -85,7 +90,7 @@
         if (xhr.status < 400) {
           getRKS (function (rks) {
             var xhr = new XMLHttpRequest ();
-            var addURL = 'http://s.hatena.com/star.add_multi.json?uri=' + encodeURIComponent (url) + '&rks=' + encodeURIComponent (rks);
+            var addURL = 'http://' + config.getDomain ('s') + '/star.add_multi.json?uri=' + encodeURIComponent (url) + '&rks=' + encodeURIComponent (rks);
             xhr.open ('GET', addURL, true);
             xhr.onreadystatechange = function () {
               if (xhr.readyState == 4) {
@@ -112,10 +117,36 @@
          '&token=' + encodeURIComponent (token));
   } // addStar
   
+  function getCurrentUser (nextCode, opts) {
+    var self = this;
+    if (self.myInfo && !(opts && opts.fromServer)) {
+      setTimeout (function () {
+        nextCode.apply (self, [self.myInfo]);
+      }, 1);
+      return;
+    }
+    
+    var xhr = new XMLHttpRequest ();
+    xhr.open ('GET', 'http://' + config.getDomain ('n') + '/applications/my.json', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status < 400) {
+          var json = JSON.parse (xhr.responseText);
+          if (json) {
+            var user = new UserInfo ({nanoJSON: json, config: config});
+            self.myInfo = user;
+            nextCode.apply (self, [user]);
+          }
+        }
+      }
+    };
+    xhr.send (null);
+  } // getCurrentUser
+  
   function getRKS (nextCode) {
     var tthis = this;
     var xhr = new XMLHttpRequest ();
-    xhr.open ('GET', 'http://s.hatena.com/entries.json', true);
+    xhr.open ('GET', 'http://' + config.getDomain ('s') + '/entries.json', true);
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
         if (xhr.status < 400) {
@@ -133,7 +164,7 @@
   function getRKM (nextCode) {
     var tthis = this;
     var xhr = new XMLHttpRequest ();
-    xhr.open ('GET', 'http://n.hatena.ne.jp/touch/setting/', true);
+    xhr.open ('GET', 'http://' + config.getDomain ('n') + '/touch/setting/', true);
     xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
         if (xhr.status < 400) {
