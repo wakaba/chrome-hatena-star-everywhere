@@ -21,6 +21,13 @@ chrome.extension.onRequest.addListener (function (req, sender, sendRes) {
     }
   }
   
+  if (res.url) {
+    var m = res.url.match (/^https?:\/\/twitter\.com\/([^\/]+)\/status\/(.*)$/);
+    if (m) {
+      res.url = 'http://twitter.com/' + m[1] + '/statuses/' + m[2];
+    }
+  }
+  
   sendRes (res);
 });
 
