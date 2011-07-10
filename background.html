@@ -27,6 +27,7 @@
     }
     
     pi.title = tab.title;
+    pi.originalTitle = tab.title;
     pi.parsePageMetadata (tabId, function () {
       if (this.url != tab.url) {
         logger.add ('Canonical URL of page <' + tab.url + '> is <' + this.url + '>');

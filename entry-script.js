@@ -25,10 +25,24 @@ var UserInfo = bg.UserInfo;
     
     if (param.url) {
       setTimeout (function () { openURL (param.url, param.title) }, 100);
+      if (param.title == param.originalTitle) {
+        chrome.tabs.getSelected (null, function (tab) {
+          if (tab) {
+            self.pageInfo.title = tab.title;
+            starEntryInfo.getElementsByClassName ('entry-title')[0].textContent = tab.title;
+          }
+        });
+      }
     } else {
       chrome.tabs.getSelected (null, function (tab) {
         if (tab) {
-          setTimeout (function () { openURL (tab.url, tab.title) }, 100);
+          setTimeout (function () {
+            var pi = new PageInfo (tab.url);
+            pi.title = tab.title;
+            pi.parsePageMetadata (tab.id, function () {
+              openURL (pi.url, pi.title);
+            });
+          }, 100);
         }
       });
     }

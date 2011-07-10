@@ -2,13 +2,56 @@
 
 (function () {
   if (self.Hatena && Hatena.Star && Hatena.Star.SiteConfig) return;
-
+  
   var showStarScript = document.createElement ("script");
   showStarScript.src = "http://s.hatena.com/js/HatenaStar.js";
   showStarScript.charset = 'utf-8';
   showStarScript.onload = function () {
+    var orig_getStarEntries = Hatena.Star.EntryLoader.getStarEntries;
+    Hatena.Star.EntryLoader.getStarEntries = function () {
+      var entries = Hatena.Star.EntryLoader.entries;
+      entries.forEach (function (entry) {
+        var url = entry.uri;
+        var m = url.match (/^(https?):\/\/([^\/]+)\/[^\#]*\#!(\/.*)/);
+        if (m) {
+          url = m[1] + '://' + m[2] + m[3];
+        }
+        entry.uri = url;
+      });
+      
+      return orig_getStarEntries.apply (this, arguments);
+    }; // getStarEntries
+    
+    var orig_get = Hatena.Star.EntryLoader.getEntryByENodeAndSelectors;
+    Hatena.Star.EntryLoader.getEntryByENodeAndSelectors = function (eNode, selectors) {
+      if (eNode && eNode.hatenaStarChromeENodeProcessed) {
+        return null;
+      }
+      eNode.hatenaStarChromeENodeProcessed = true;
+      return orig_get.apply (this, arguments);
+    }; // getEntryByENodeAndSelectors
+    
     Hatena.Star.ConfigLoader.addEventListener ('load', function () { Hatena.Star.EntryLoader.loadNewEntries() });
     new Hatena.Star.ConfigLoader();
+    
+    window.addEventListener ('scroll', function () {
+      loadStarLater ();
+    }, true);
+    window.addEventListener ('click', function () {
+      loadStarLater ();
+    }, true);
+    
+    var loadStarTimer = 0;
+    var loadStarLater = function () {
+      clearTimeout (loadStarTimer);
+      loadStarTimer = setTimeout (function () {
+        loadStar ();
+      }, 1000);
+    }; // loadStarLater
+    var loadStar = function () {
+      Hatena.Star.EntryLoader.loadNewEntries ();
+    }; // loadStar
+    loadStarLater ();
   }; // starScript.onload
   document.body.appendChild (showStarScript);
 }) ();

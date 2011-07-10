@@ -13,6 +13,7 @@ PageInfo.prototype = {
   }, // init
   
   title: null,
+  originalTitle: null,
   config: null,
   
   getSiteConfigs: function (nextCode) {
@@ -98,7 +99,7 @@ PageInfo.prototype = {
   }, // ifURLHasSiteConfig
   
   getEntryPopupURL: function () {
-    return "entry.html?url=" + encodeURIComponent (this.url) + '&title=' + encodeURIComponent (this.title);
+    return "entry.html?url=" + encodeURIComponent (this.url) + '&title=' + encodeURIComponent (this.title) + '&original_title=' + encodeURIComponent (this.originalTitle);
   }, // entryPopupURL
   
   getStarEntry: function (nextCode) {
