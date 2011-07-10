@@ -151,8 +151,8 @@
     padding: 0.2em;
     border: #BBBBBB outset 1px;
     border-radius: 3px;
-    height: 20em;
-    max-height: 40em;
+    min-height: 20em;
+    max-height: 30em;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -202,6 +202,7 @@
   
   #stars .shop-link {
     text-align: right;
+    margin-right: 1em;
   }
   #stars .shop-link a {
     text-decoration: none;
@@ -209,6 +210,16 @@
   }
   #stars .shop-link img {
     vertical-align: baseline;
+  }
+  
+  #stars .star-comment-star {
+    margin: 0.5em 1.3em 0.5em 0.7em;
+    font-size: 100%;
+    font-weight: normal;
+  }
+  
+  #star-user-list {
+    margin-left: 0.7em;
   }
   
   #star-comment-list,
@@ -259,6 +270,7 @@
     background-color: #F0F0F0;
     border-top-right-radius: 7px;
     font-size: 80%;
+    text-align: left;
   }
   .star-comment-star img {
     vertical-align: bottom;

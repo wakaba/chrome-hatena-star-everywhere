@@ -22,15 +22,33 @@
     
     if (param.url) {
       setTimeout (function () { openURL (param.url, param.title) }, 100);
+    } else {
+      chrome.tabs.getSelected (null, function (tab) {
+        if (tab) {
+          setTimeout (function () { openURL (tab.url, tab.title) }, 100);
+        }
+      });
     }
     
     getMyInfo (function (json) {
-      var name = json.url_name;
-      if (name) {
-        var css = 'li[data-star-user-name="' + name + '"] .star-delete, li[data-comment-user-name="' + name + '"] .comment-delete, li[data-entry-user-name="' + name + '"] .entry-delete { display: block !important }';
+      var urlName = json.url_name;
+      var myself = document.getElementById ('stars').getElementsByClassName ('star-comment-star')[0];
+      if (urlName) {
+        var css = 'li[data-star-user-name="' + urlName + '"] .star-delete, li[data-comment-user-name="' + urlName + '"] .comment-delete, li[data-entry-user-name="' + urlName + '"] .entry-delete { display: block !important }';
         var style = document.createElement ('style');
         style.textContent = css;
         document.body.appendChild (style);
+        
+        var nickname = urlName;
+        var userURL = 'http://www.hatena.com/' + urlName + '/';
+        myself.getElementsByClassName ('profile-image-link')[0].href = userURL;
+        myself.getElementsByClassName ('profile-image')[0].src = 'http://n.hatena.com/' + urlName + '/profile/image?size=16';
+        var nicknameEl = myself.getElementsByClassName ('nickname-link')[0];
+        nicknameEl.href = userURL;
+        nicknameEl.textContent = nickname;
+        nicknameEl.title = 'id:' + urlName;
+      } else {
+        
       }
     });
     
@@ -454,6 +472,7 @@ function postHaikuEntry (args, nextCode) {
     xhr.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
     var data = 'keyword=' + encodeURIComponent (args.word) +
         '&status=' + encodeURIComponent (args.body) +
+        '&source=' + encodeURIComponent (bg.userAgentName) +
         '&rkm=' + encodeURIComponent (rkm);
     xhr.send (data);
   });
