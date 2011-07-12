@@ -5,6 +5,9 @@
   "hatenastar_everywhere_desc": {
     "message": "Add Hatena Star button to your browser and Web pages in the world."
   },
+  "hatenastar_everywhere_home": {
+    "message": "http://h.hatena.com/keyword/Hatena%20Star%20Everywhere%20%28Chrome%29",
+  },
   
   "stars": {
     "message": "Stars"
