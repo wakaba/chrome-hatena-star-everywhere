@@ -71,6 +71,14 @@ body {
   overflow-x: hidden;
 }
 
+#permission-error {
+  margin: 1em;
+  padding: 0.7em;
+  background: #EEEEEE;
+  border-radius: 0.5em;
+  font-size: 120%;
+}
+
 /* ========== Header ========== */
 
 header {

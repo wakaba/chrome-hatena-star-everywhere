@@ -111,6 +111,8 @@ var UserInfo = bg.UserInfo;
       });
       
       updateAvailUserStarCounts ();
+      
+      document.getElementById ('permission-error').hidden = true;
     } // openURL
     
     function updateTotalStarCounts () {

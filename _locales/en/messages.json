@@ -179,6 +179,10 @@
     "message": "3. Allowed URLs"
   },
   
+  "entry_permission_error": {
+    "message": "The extension cannot access to the page you are browsing now.  Please reload the page and show the Hatena Star panel again."
+  },
+  
   "devel": {
     "message": "For development"
   },
