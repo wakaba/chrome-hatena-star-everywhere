@@ -70,8 +70,12 @@
     pi.ifURLHasSiteConfig (function (domain, siteConfig) {
       logger.add ('Use SiteConfig for domain "' + domain + '" (SiteConfig retrieved at ' + (new Date (PageInfo.siteConfigsTimestamp)) + ')');
       chrome.tabs.executeScript (tabId, {
-        file: 'load-hatena-star.js',
-        // allFrames: true,
+        code: "document.documentElement.setAttribute ('data-hatena-star-chrome-tld', '" + (config.get ('tld') == 'jp' ? 'jp' : 'com') + "')"
+      }, function () {
+        chrome.tabs.executeScript (tabId, {
+          file: 'load-hatena-star.js',
+          // allFrames: true,
+        });
       });
     });
   });
@@ -192,7 +196,7 @@
     });
   } // updateBAStarCount
   
-  self.userAgentName = 'Hatena Star Everywhere (Chrome)';
+  self.userAgentName = chrome.i18n.getMessage ('hatenastar_everywhere') + ' (Chrome)';
   logger.add ("background.html initialized");
 </script>
 <!--

@@ -4,7 +4,12 @@
   if (self.Hatena && Hatena.Star && Hatena.Star.SiteConfig) return;
   
   var showStarScript = document.createElement ("script");
-  showStarScript.src = "http://s.hatena.com/js/HatenaStar.js";
+  var tld = document.documentElement.getAttribute ('data-hatena-star-chrome-tld') || '';
+  if (tld == 'jp') {
+    showStarScript.src = "http://s.hatena.ne.jp/js/HatenaStar.js";
+  } else {
+    showStarScript.src = "http://s.hatena.com/js/HatenaStar.js";
+  }
   showStarScript.charset = 'utf-8';
   showStarScript.onload = function () {
     var orig_getStarEntries = Hatena.Star.EntryLoader.getStarEntries;

@@ -382,7 +382,7 @@ function showHaikuEntries (entries) {
   entries.forEach (insertHaikuEntry);
 
   document.getElementById ('menu-note-count').textContent = entries.length;
-  haikuNoteMore.getElementsByTagName ('a')[0].href = 'http://' + bg.config.getDomain ('h') + '/target?word=' + encodeURIComponent (self.pageInfo.url);
+  haikuNoteMore.getElementsByTagName ('a')[0].href = 'http://' + bg.config.getDomain ('h') + '/target?word=' + encodeURIComponent (window.pageInfo.url);
   
   getMyInfo (function (user) {
     user.fillHTML (haikuNoteForm.getElementsByClassName ('user-info')[0]);
