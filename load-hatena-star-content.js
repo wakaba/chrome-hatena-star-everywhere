@@ -43,7 +43,10 @@
       return orig_get.apply (this, arguments);
     }; // getEntryByENodeAndSelectors
     
-    Hatena.Star.ConfigLoader.addEventListener ('load', function () { Hatena.Star.EntryLoader.loadNewEntries() });
+    Hatena.Star.ConfigLoader.addEventListener ('load', function () {
+      insertSiteConfig ();
+      Hatena.Star.EntryLoader.loadNewEntries ();
+    });
     new Hatena.Star.ConfigLoader();
     
     window.addEventListener ('scroll', function () {
@@ -66,6 +69,79 @@
     loadStarLater ();
   }; // starScript.onload
   document.body.appendChild (showStarScript);
+  
+  var insertStarContainer = function (refEl, url, title) {
+    var parent = refEl.parentNode;
+    if (parent.hatenaStarChromeHasURL) {
+      if (parent.hatenaStarChromeHasURL[url]) {
+        return;
+      }
+    } else {
+      parent.hatenaStarChromeHasURL = {};
+    }
+    parent.hatenaStarChromeHasURL[url] = true;
+    
+    var container = document.createElement ('span');
+    container.className = 'hatena-star-chrome-can-star';
+    container.innerHTML = '<a class=hatena-star-chrome-star-url hidden></a><span class=hatena-star-chrome-container></span>';
+    container.firstChild.href = url;
+    if (title) container.firstChild.textContent = title;
+    parent.insertBefore (container, refEl.nextSibling);
+  }; // insertStarContainer
+  
+  var insertSiteConfig = function () {
+    if (!Hatena.Star.SiteConfig) {
+      Hatena.Star.SiteConfig = {};
+      Hatena.Star.SiteConfig.entryNodes = Hatena.Star.SiteConfig.entryNodes || {};
+      Hatena.Star.SiteConfig.entryNodes['.hatena-star-chrome-can-star'] = {
+        container: '.hatena-star-chrome-container',
+        title: '.hatena-star-chrome-star-url',
+        uri: '.hatena-star-chrome-star-url'
+      }
+    }
+  }; // insertSiteConfig
+  
+  var links = document.links;
+  var linksL = document.links.length;
+  for (var i = 0; i < linksL; i++) {
+    var link = links[i];
+    var url = link.href;
+    
+    var m = url.match (/^http:\/\/b.hatena.ne.jp\/entry\/(.+)/);
+    if (m) {
+      var url = m[1];
+      url = url.replace (/%23/, '#');
+      url = url.replace (/^s\//, 'https://');
+      if (!url.match (/^https?:\/\//)) {
+        url = 'http://' + url;
+      }
+      insertStarContainer (link, url, null);
+      continue;
+    }
+    
+    var classes = link.className;
+    if (/\bmixi-check-button\b/.test (classes)) {
+      var url = link.getAttribute ('data-url');
+      if (url) {
+        insertStarContainer (link, url, null);
+        continue;
+      }
+    }
+  }
+  
+  var iframes = document.getElementsByTagName ('iframe');
+  var iframesL = iframes.length;
+  for (var i = 0; i < iframesL; i++) {
+    var iframe = iframes[i];
+    var src = iframe.src;
+    if (src.replace (/^http:\/\/platform0.twitter.com\/widgets\/tweet_button.html\?/, '')) {
+      var params = {};
+      src.split (/[&;]/).map (function (v) { return v.split (/=/, 2).map (function (v) { try { return decodeURIComponent (v) } catch (e) { return v } }) }).forEach (function (v) { params[v[0]] = v[1] });
+      if (params.url) {
+        insertStarContainer (iframe, params.url, params.text);
+      }
+    }
+  }
 }) ();
 
 /* ***** BEGIN LICENSE BLOCK *****

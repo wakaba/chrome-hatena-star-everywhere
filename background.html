@@ -67,8 +67,8 @@
       return;
     }
     
-    pi.ifURLHasSiteConfig (function (domain, siteConfig) {
-      logger.add ('Use SiteConfig for domain "' + domain + '" (SiteConfig retrieved at ' + (new Date (PageInfo.siteConfigsTimestamp)) + ')');
+//    pi.ifURLHasSiteConfig (function (domain, siteConfig) {
+//      logger.add ('Use SiteConfig for domain "' + domain + '" (SiteConfig retrieved at ' + (new Date (PageInfo.siteConfigsTimestamp)) + ')');
       chrome.tabs.executeScript (tabId, {
         code: "document.documentElement.setAttribute ('data-hatena-star-chrome-tld', '" + (config.get ('tld') == 'jp' ? 'jp' : 'com') + "')"
       }, function () {
@@ -77,7 +77,7 @@
           // allFrames: true,
         });
       });
-    });
+//    });
   });
   
   function addStar (url, title, starCounts, token, nextCode) {
