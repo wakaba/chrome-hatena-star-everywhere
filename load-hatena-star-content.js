@@ -70,16 +70,31 @@
   }; // starScript.onload
   document.body.appendChild (showStarScript);
   
+  var stopElementName = {
+    div: true, section: true, article: true, nav: true, aside: true,
+    blockquote: true, header: true, footer: true, p:true,
+    hgroup: true, h1: true, h2: true, h3: true, h4: true, h5: true, h6: true,
+    li: true, dt: true, dd: true, menu: true,
+  };
   var insertStarContainer = function (refEl, url, title) {
     var parent = refEl.parentNode;
-    if (parent.hatenaStarChromeHasURL) {
-      if (parent.hatenaStarChromeHasURL[url]) {
+    var marker = parent;
+    while (marker.parentNode) {
+      var name = marker.localName.toLowerCase ();
+      if (stopElementName[name]) {
+        break;
+      }
+      marker = marker.parentNode;
+    }
+    marker = marker || parent;
+    if (marker.hatenaStarChromeHasURL) {
+      if (marker.hatenaStarChromeHasURL[url]) {
         return;
       }
     } else {
-      parent.hatenaStarChromeHasURL = {};
+      marker.hatenaStarChromeHasURL = {};
     }
-    parent.hatenaStarChromeHasURL[url] = true;
+    marker.hatenaStarChromeHasURL[url] = true;
     
     var container = document.createElement ('span');
     container.className = 'hatena-star-chrome-can-star';
@@ -90,14 +105,12 @@
   }; // insertStarContainer
   
   var insertSiteConfig = function () {
-    if (!Hatena.Star.SiteConfig) {
-      Hatena.Star.SiteConfig = {};
-      Hatena.Star.SiteConfig.entryNodes = Hatena.Star.SiteConfig.entryNodes || {};
-      Hatena.Star.SiteConfig.entryNodes['.hatena-star-chrome-can-star'] = {
-        container: '.hatena-star-chrome-container',
-        title: '.hatena-star-chrome-star-url',
-        uri: '.hatena-star-chrome-star-url'
-      }
+    if (!Hatena.Star.SiteConfig) Hatena.Star.SiteConfig = {};
+    Hatena.Star.SiteConfig.entryNodes = Hatena.Star.SiteConfig.entryNodes || {};
+    Hatena.Star.SiteConfig.entryNodes['.hatena-star-chrome-can-star'] = {
+      container: '.hatena-star-chrome-container',
+      title: '.hatena-star-chrome-star-url',
+      uri: '.hatena-star-chrome-star-url'
     }
   }; // insertSiteConfig
   
@@ -107,7 +120,7 @@
     var link = links[i];
     var url = link.href;
     
-    var m = url.match (/^http:\/\/b.hatena.ne.jp\/entry\/(.+)/);
+    var m = url.match (/^http:\/\/b.hatena.ne.jp\/entry(?:\.touch)?\/(.+)/);
     if (m) {
       var url = m[1];
       url = url.replace (/%23/, '#');
