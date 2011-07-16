@@ -1,8 +1,9 @@
 Hatena Star Everywhere Chrome Extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is an early development version of "Hatena Star Everywhere"
-Chrome Extension.
+This is an development version of "Hatena Star Everywhere" Chrome
+Extension, which adds Hatena Star function to every page opened in
+your Chrome browser.
 
 * Install
 
@@ -17,6 +18,10 @@ Latest version of this software is available at:
   - <https://github.com/wakaba/chrome-hatena-star-everywhere>
   - <http://suika.fam.cx/gate/git/wi/web/chrome-hatena-star-everywhere.git/tree>
 
+Packaged version of this software is available from:
+
+  - <http://wakaba.github.com/packages/#chrome-hatena-star-everywhere>
+
 * See also
 
 Hatena Star <http://s.hatena.com/>
@@ -30,3 +35,15 @@ SiteConfigWiki <http://s.hatena.com/siteconfig>
 * Author
 
 Wakaba <w@suika.fam.cx>.
+
+* Acknowledgements
+
+Thanks to Hatena Haiku community
+<http://h1beta.hatena.ne.jp/keyword/%E3%81%A9%E3%81%93%E3%81%A7%E3%82%82%E3%81%AF%E3%81%A6%E3%81%AA%E3%82%B9%E3%82%BF%E3%83%BC%20%28Chrome%29>
+for their valuable comments.
+
+Thanks to id:yanmani for the icon
+<http://h1beta.hatena.ne.jp/yanmani/225867308103024864>.
+
+Thanks to id:jkondo and other Hatena staffs for the original idea of
+"Hatena Star everywhere".
