@@ -141,6 +141,16 @@
     "message": "はてな ID を使う"
   },
   
+  "star_as_user": {
+    "message": "ページ内のスター"
+  },
+  "star_as_user_true": {
+    "message": "ユーザーアイコンとスターを表示する"
+  },
+  "star_as_user_false": {
+    "message": "スターだけを表示する"
+  },
+  
   "shop_star": {
     "message": "カラースターショップ"
   },

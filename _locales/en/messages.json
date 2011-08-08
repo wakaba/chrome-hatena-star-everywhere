@@ -144,6 +144,16 @@
     "message": "Use Hatena IDs"
   },
   
+  "star_as_user": {
+    "message": "Stars in pages"
+  },
+  "star_as_user_true": {
+    "message": "Show user icons with their stars"
+  },
+  "star_as_user_false": {
+    "message": "Show stars only"
+  },
+  
   "shop_star": {
     "message": "Color star shop"
   },
