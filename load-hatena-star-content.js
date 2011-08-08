@@ -1,10 +1,64 @@
 /* Run in the content's environment */
 
 (function () {
-  if (self.Hatena && Hatena.Star && Hatena.Star.SiteConfig) return;
+  var extConfig = JSON.parse (document.documentElement.getAttribute ('data-hatena-star-chrome-config') || '{}');
+
+  var common = function () {
+    if (extConfig.useIconStar) {
+      var orig_generateImg = Hatena.Star.Star.prototype.generateImg;
+      Hatena.Star.Star.prototype.generateImg = function () {
+        orig_generateImg.apply(this, arguments);
+
+        var img = this.img;
+        img.src = Hatena.Star.User.getProfileIcon (this.screen_name).src;
+        if (1) {
+          img.width = 16;
+          img.height = 16;
+        } else {
+          img.width = 11;
+          img.height = 10;
+        }
+        img.style.paddingRight = '1px';
+
+        var img2 = Hatena.Star.Star.getImage(this.container);
+        img2.style.position = 'absolute';
+        img2.style.left = 0;
+        img2.style.bottom = 0;
+        img2.style.WebkitBoxShadow = '1px 1px 2px #EEEEEE';
+        img2.style.borderRadius = '2px';
+        img2.style.backgroundColor = 'white';
+        if (1) {
+          img2.width = 8;
+          img2.height = 8;
+        } else {
+          img2.width = 5;
+          img2.height = 5;
+        }
+
+        var span = document.createElement('span');
+        span.style.display = 'inline-block';
+        span.style.position = 'relative';
+        span.appendChild(img);
+        span.appendChild(img2);
+        this.img = span;
+      }; // generateImg
+    }
+  }; // common
+    
+  if (self.Hatena && Hatena.Star && Hatena.Star.SiteConfig) {
+    if (Hatena.Star.WindowObserver) {
+      common ();
+    } else {
+      Hatena.Star.onLoadFunctions = Hatena.Star.onLoadFunctions || [];
+      Hatena.Star.onLoadFunctions.push (function () {
+        common ();
+      });
+    }
+    return;
+  }
   
   var showStarScript = document.createElement ("script");
-  var tld = document.documentElement.getAttribute ('data-hatena-star-chrome-tld') || '';
+  var tld = extConfig.tld;
   if (tld == 'jp') {
     showStarScript.src = "http://s.hatena.ne.jp/js/HatenaStar.js";
   } else {
@@ -33,6 +87,8 @@
       
       return orig_getStarEntries.apply (this, arguments);
     }; // getStarEntries
+    
+    common ();
     
     var orig_get = Hatena.Star.EntryLoader.getEntryByENodeAndSelectors;
     Hatena.Star.EntryLoader.getEntryByENodeAndSelectors = function (eNode, selectors) {

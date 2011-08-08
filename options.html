@@ -198,6 +198,17 @@
       <span data-msgid=user_names_use_hatena_id>Use Hatena ID</span></label>
     </ul>
   </section>
+  <section>
+    <hgroup>
+      <h3 data-msgid=star_as_user>Star icon</h3>
+    </hgroup>
+    <ul class=choices>
+      <li><label><input type=radio name=useIconStar value=true id=useIconStar-true> 
+      <span data-msgid=star_as_user_true>User icons with stars</span></label>
+      <li><label><input type=radio name=useIconStar value=false id=useIconStar-false> 
+      <span data-msgid=star_as_user_false>Stars</span></label>
+    </ul>
+  </section>
 </section>
 
 <section id=privacy>
@@ -307,6 +318,13 @@
     }; // onchange
   });
   document.getElementById ('nameType-' + config.get ('nameType')).checked = true;
+  
+  ['true', 'false'].forEach (function (value) {
+    document.getElementById ('useIconStar-' + value).onchange = function () {
+      config.set ('useIconStar', value == 'true');
+    }; // onchange
+  });
+  document.getElementById ('useIconStar-' + config.get ('useIconStar')).checked = true;
   
   var siteConfig = document.getElementById ('siteconfig');
   siteConfig.getElementsByTagName ('time')[0].textContent = new Date (PageInfo.siteConfigsTimestamp).toLocaleString ();

@@ -9,6 +9,7 @@ UserConfig.prototype = {
     tld: /^ja(?:_|$)/.test (chrome.i18n.getMessage ('@@ui_locale')) ? 'jp' : 'com',
     iconType: 'default',
     nameType: 'nickname',
+    useIconStar: false,
   }, // defaultValues
   
   get: function (key) {
