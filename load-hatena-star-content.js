@@ -4,6 +4,9 @@
   var extConfig = JSON.parse (document.documentElement.getAttribute ('data-hatena-star-chrome-config') || '{}');
 
   var common = function () {
+    Hatena.Star.User.profileIconType = extConfig.iconType;
+    Hatena.Star.User.useHatenaUserNickname = extConfig.nameType == 'nickname';
+    
     if (extConfig.useIconStar) {
       var orig_generateImg = Hatena.Star.Star.prototype.generateImg;
       Hatena.Star.Star.prototype.generateImg = function () {

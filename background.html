@@ -72,6 +72,8 @@
 //      logger.add ('Use SiteConfig for domain "' + domain + '" (SiteConfig retrieved at ' + (new Date (PageInfo.siteConfigsTimestamp)) + ')');
       var extConfig = {
         tld: config.get ('tld') == 'jp' ? 'jp' : 'com',
+        iconType: config.get ('iconType'),
+        nameType: config.get ('nameType'),
         useIconStar: config.get ('useIconStar') == 'true' ? true : false,
       };
       chrome.tabs.executeScript (tabId, {
