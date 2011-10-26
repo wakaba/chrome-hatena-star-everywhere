@@ -85,7 +85,13 @@
     "message": "Hatena ID"
   },
   "login": {
-    "message": "Login"
+    "message": "Login (Hatena)"
+  },
+  "login_facebook": {
+    "message": "Login (Facebook)"
+  },
+  "login_twitter": {
+    "message": "Login (Twitter)"
   },
   "login_add_stars": {
     "message": "You need to login to add stars."

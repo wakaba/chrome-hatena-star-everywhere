@@ -61,10 +61,20 @@ var UserInfo = bg.UserInfo;
         }
       } else {
         var loginURL = 'https://' + bg.config.getDomain ('www') + '/login?location=http://' + bg.config.getDomain ('s') + '/';
-        var registerURL = 'https://' + bg.config.getDomain ('www') + '/register?location=http://' + bg.config.getDomain ('s') + '/';
+        var loginTwitterURL = 'https://' + bg.config.getDomain ('www') + '/oauth/twitter/oauth?location=http://' + bg.config.getDomain ('s') + '/';
+        var loginFacebookURL = 'https://' + bg.config.getDomain ('www') + '/oauth/facebook.default/oauth?location=http://' + bg.config.getDomain ('s') + '/';
+        var registerURL = 'https://' + bg.config.getDomain ('www') + '/login/upgrade?location=http://' + bg.config.getDomain ('s') + '/';
         var links = document.getElementsByClassName ('link-login');
         for (var i = 0; i < links.length; i++) {
           links[i].href = loginURL;
+        }
+        links = document.getElementsByClassName ('link-login-twitter');
+        for (var i = 0; i < links.length; i++) {
+          links[i].href = loginTwitterURL;
+        }
+        links = document.getElementsByClassName ('link-login-facebook');
+        for (var i = 0; i < links.length; i++) {
+          links[i].href = loginFacebookURL;
         }
         links = document.getElementsByClassName ('link-register');
         for (var i = 0; i < links.length; i++) {
