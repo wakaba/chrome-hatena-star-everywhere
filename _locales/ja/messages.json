@@ -82,7 +82,13 @@
     "message": "はてな ID"
   },
   "login": {
-    "message": "ログイン"
+    "message": "ログイン (はてな)"
+  },
+  "login_facebook": {
+    "message": "ログイン (Facebook)"
+  },
+  "login_twtiter": {
+    "message": "ログイン (Twitter)"
   },
   "login_add_stars": {
     "message": "スターの追加にはログインが必要です。"
