@@ -140,9 +140,7 @@
     <div hidden id=account-for-user>
       <p class=user-info>
       <menu class=actions>
-        <li><a id=logout-link onclick="
-          return confirm(this.getAttribute ('data-confirm'));
-        " data-confirm="Do you really want to logout?" data-data-confirm-msgid=logout_confirm data-msgid=logout>Logout</a>
+        <li><a id=logout-link data-confirm="Do you really want to logout?" data-data-confirm-msgid=logout_confirm data-msgid=logout>Logout</a>
       </menu>
     </div>
     <div id=account-for-guest>
@@ -241,13 +239,7 @@
     <p><textarea id=allowedURLs></textarea>
   </section>
   
-  <p><button type=button onclick="
-    if (confirm(this.getAttribute ('data-confirm'))) {
-      config.delete ('allowedURLs');
-      config.delete ('disallowedURLs');
-      location.reload ();
-    }
-  " data-confirm="Do you really want to revert all your changes?" data-data-confirm-msgid=url_patterns_revert_confirm data-msgid=url_patterns_revert>Use default</button>
+  <p><button type=button id=urls-revert-button data-confirm="Do you really want to revert all your changes?" data-data-confirm-msgid=url_patterns_revert_confirm data-msgid=url_patterns_revert>Use default</button>
 </section>
 
 <section id=devel>
@@ -262,86 +254,12 @@
   </menu>
 </section>
 
-<script>
-  var bg = chrome.extension.getBackgroundPage ();
-  var config = bg.config;
-  
-  var PageInfo = bg.PageInfo;
-
-  var ids = ['disallowedURLs', 'allowedURLs'];
-  ids.forEach (function (id) {
-    var el = document.getElementById (id);
-    el.value = config.get (id);
-    el.onchange = function () {
-      config.set (id, el.value);
-    }; // onchange
-  });
-  
-  var accountForUser = document.getElementById ('account-for-user');
-  var accountForGuest = document.getElementById ('account-for-guest');
-  function updateAccountInfo () {
-    var tld = config.get ('tld');
-    document.getElementById ('community-' + tld).checked = true;
-    bg.getCurrentUser (function (user) {
-      if (user.urlName) {
-        accountForUser.hidden = false;
-        accountForGuest.hidden = true;
-        user.fillHTML (accountForUser.getElementsByClassName ('user-info')[0]);
-        document.getElementById ('logout-link').href = 'http://' + config.getDomain ('www') + '/logout?location=http://' + config.getDomain ('s') + '/';
-      } else {
-        accountForUser.hidden = true;
-        accountForGuest.hidden = false;
-        document.getElementById ('login-link').href = 'http://' + config.getDomain ('www') + '/login?location=http://' + config.getDomain ('s') + '/';
-        document.getElementById ('register-link').href = 'http://' + config.getDomain ('www') + '/register?location=http://' + config.getDomain ('s') + '/';
-      }
-    }, {fromServer: true});
-  } // updateAccountInfo
-  updateAccountInfo ();
-  
-  ['jp', 'com'].forEach (function (value) {
-    document.getElementById ('community-' + value).onchange = function () {
-      config.set ('tld', value);
-      updateAccountInfo ();
-    }; // onchange
-  });
-  
-  ['default', 'face', 'icon'].forEach (function (value) {
-    document.getElementById ('iconType-' + value).onchange = function () {
-      config.set ('iconType', value);
-    }; // onchange
-  });
-  document.getElementById ('iconType-' + config.get ('iconType')).checked = true;
-  
-  ['nickname', 'hatenaid'].forEach (function (value) {
-    document.getElementById ('nameType-' + value).onchange = function () {
-      config.set ('nameType', value);
-    }; // onchange
-  });
-  document.getElementById ('nameType-' + config.get ('nameType')).checked = true;
-  
-  ['true', 'false'].forEach (function (value) {
-    document.getElementById ('useIconStar-' + value).onchange = function () {
-      config.set ('useIconStar', value == 'true');
-    }; // onchange
-  });
-  document.getElementById ('useIconStar-' + config.get ('useIconStar')).checked = true;
-  
-  var siteConfig = document.getElementById ('siteconfig');
-  siteConfig.getElementsByTagName ('time')[0].textContent = new Date (PageInfo.siteConfigsTimestamp).toLocaleString ();
-  siteConfig.getElementsByTagName ('button')[0].onclick = function () {
-    PageInfo.siteConfigsTimestamp = 0;
-    var pi = new PageInfo ('http://www.hatena.com/');
-    pi.config = config;
-    pi.getSiteConfigs (function () {
-      siteConfig.getElementsByTagName ('time')[0].textContent = new Date (PageInfo.siteConfigsTimestamp).toLocaleString ();
-    });
-  }; // onclick
-</script>
+<script src=options.js></script>
 <script src=i18n.js charset=utf-8></script>
 
 <!--
 /* ***** BEGIN LICENSE BLOCK *****
- * Copyright 2011 Wakaba <w@suika.fam.cx>.  All rights reserved.
+ * Copyright 2011-2013 Wakaba <wakaba@suikawiki.org>.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the same terms as Perl itself.
@@ -378,7 +296,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Wakaba <w@suika.fam.cx>
+ *   Wakaba <wakaba@suikawiki.org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
